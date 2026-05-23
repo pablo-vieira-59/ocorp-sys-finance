@@ -1,0 +1,263 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AssetDto, AssetHistoryDto, FinanceService, InvestmentDto, PatrimonySummaryDto } from '../../services/finance.service';
+import { AuthService } from '../../services/auth.service';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexTitleSubtitle,
+  ApexDataLabels,
+  ApexFill,
+  ApexYAxis,
+  ApexTooltip,
+  ApexStroke,
+  ApexNonAxisChartSeries,
+  ApexResponsive,
+  ApexTheme,
+  NgApexchartsModule,
+  ApexPlotOptions,
+  ApexLegend,
+  ApexGrid
+} from 'ng-apexcharts';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+
+export type BarChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  title: ApexTitleSubtitle;
+  responsive: ApexResponsive[];
+  theme: ApexTheme;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
+  grid: ApexGrid;
+  yaxis: ApexYAxis;
+};
+
+export type DonutChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  title: ApexTitleSubtitle;
+  responsive: ApexResponsive[];
+  theme: ApexTheme;
+  dataLabels: ApexDataLabels;
+  legend: ApexLegend;
+};
+
+@Component({
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NgApexchartsModule,RouterLink],
+  templateUrl: './dashboard.component.html'
+})
+export class DashboardComponent implements OnInit {
+  financeService = inject(FinanceService);
+  authService = inject(AuthService);
+  patrimony: PatrimonySummaryDto = {
+    assets: [] as AssetDto[],
+    investments: [] as InvestmentDto[],
+    assetHistories: [] as AssetHistoryDto[]
+  } as PatrimonySummaryDto;
+  userName = '';
+  assetHistoryChartOptions?: BarChartOptions;
+  assetTypeChartOptions?: DonutChartOptions;
+  investmentTypeChartOptions?: DonutChartOptions;
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      if (user) this.userName = user.name || 'Usuário';
+    });
+    this.financeService.getPatrimony().subscribe({
+      next: (data) => {
+        this.patrimony = data;
+        console.log(data);
+        this.initCharts();
+      }
+    });
+  }
+
+  initCharts() {
+    this.assetHistoryChartOptions = {
+      series: [
+        {
+          name: 'Valor',
+          data: this.patrimony.assetHistories.map(x => x.amount)
+        }
+      ],
+
+      title: {
+        text: ''
+      },
+
+      yaxis: {
+        labels: {
+          style: {
+            fontSize: '14px',
+            fontWeight: 500
+          },
+          show: true
+        }
+      },
+
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            yaxis: {
+              labels: {
+                show: false
+              }
+            }
+          }
+        }
+      ],
+
+      chart: {
+        type: 'bar',
+        height: 280,
+        toolbar: {
+          show: false
+        },
+        fontFamily: 'Plus Jakarta Sans, sans-serif'
+      },
+
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          borderRadius: 16,
+          barHeight: '10%',
+          distributed: false
+        }
+      },
+
+      dataLabels: {
+        enabled: false,
+        textAnchor: "middle",
+        offsetX: 0,
+        style: {
+          colors: ['#000000'],
+          fontSize: '14px',
+          fontWeight: '800'
+        },
+        formatter: function (value: number) {
+          return `$${value.toFixed(2)}`;
+        }
+      },
+
+      xaxis: {
+        categories: this.patrimony.assetHistories.map(x => new Date(x.date).toLocaleDateString('pt-BR', {
+          month: '2-digit',
+          year: 'numeric'
+        })),
+
+        labels: {
+          show: true
+        },
+
+        axisBorder: {
+          show: true
+        },
+
+        axisTicks: {
+          show: true
+        }
+      },
+
+
+
+      grid: {
+        show: true
+      },
+
+      tooltip: {
+        enabled: true
+      },
+
+      legend: {
+        show: false
+      },
+
+      theme: {
+        mode: 'light', palette: 'palette1'
+      }
+    };
+
+    this.assetTypeChartOptions = {
+      series: this.patrimony.assets.map(ti => ti.estimatedValue),
+      chart: {
+        type: 'donut',
+        height: 300,
+        fontFamily: 'Plus Jakarta Sans, sans-serif'
+      },
+      dataLabels: {
+        enabled: false,
+
+      },
+      labels: this.patrimony.assets.map(ti => ti.name),
+      title: {
+        text: '',
+        align: 'center'
+      },
+      legend: {
+        position: 'bottom'
+      },
+      responsive: [
+        {
+          breakpoint: 1600,
+          options: {
+            chart: {
+              width: '100%',
+            },
+            legend: {
+              show: true,
+              position: 'bottom'
+            }
+          }
+        }
+      ],
+      theme: { mode: 'light', palette: 'palette1' }
+    };
+
+    this.investmentTypeChartOptions = {
+      series: this.patrimony.investments.map(ti => ti.currentValue),
+      chart: {
+        type: 'donut',
+        height: 300,
+        fontFamily: 'Plus Jakarta Sans, sans-serif'
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      labels: this.patrimony.investments.map(ti => ti.name),
+      title: {
+        text: '',
+        align: 'center'
+      },
+      legend: {
+        position: 'bottom'
+      },
+      responsive: [
+        {
+          breakpoint: 1600,
+          options: {
+            chart: {
+              width: '100%',
+            },
+            legend: {
+              show: true,
+              position: 'bottom'
+            }
+          }
+        }
+      ],
+      theme: { mode: 'light', palette: 'palette1' }
+    };
+  }
+}

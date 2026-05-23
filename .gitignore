@@ -1,0 +1,17 @@
+/SysFinance.API/obj
+/SysFinance.API/bin
+
+/SysFinance.Infrastructure/obj
+/SysFinance.Infrastructure/bin
+
+/SysFinance.Domain/obj
+/SysFinance.Domain/bin
+
+/SysFinance.Application/obj
+/SysFinance.Application/bin
+
+.vs/
+
+/sys-finance-web/.vscode
+/sys-finance-web/src/environments/environment.prod.ts
+/sys-finance-web/node_modules

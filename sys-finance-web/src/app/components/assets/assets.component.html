@@ -1,0 +1,86 @@
+<div class="row mt-0 mx-0 bg-white shadow top-bar">
+  <div class="col-lg-8 col-6 d-flex m-0">
+    <h2 class="my-auto">Patrimônio</h2>
+  </div>
+  <!-- <div class="col-lg-4 col-6 text-end">
+        <button (click)="showAddModal = true;" class="w-100 btn btn-primary">+ Adicionar Renda</button>
+    </div> -->
+</div>
+
+<div style="margin-top: 100px;">
+  <div class="row mb-4" *ngIf="patrimony">
+    <div class="col-md-6">
+      <div class="card bg-light shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total em Investimentos</h5>
+          <h3 class="text-success">{{ patrimony.totalInvestments | currency:'BRL' }}</h3>
+          <p class="text-muted"><small><em>(Buscado automaticamente da tela de Investimentos)</em></small></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bg-light shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total deste Patrimônio (Bens)</h5>
+          <h3 class="text-primary">{{ patrimony.totalAssets | currency:'BRL' }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-white">
+      <h5 class="mb-0">Cadastrar Novo Bem/Ativo</h5>
+    </div>
+    <div class="card-body">
+      <form (submit)="addAsset()" class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-control" name="name" [(ngModel)]="newAsset.name" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" name="type" [(ngModel)]="newAsset.type">
+            <option>Imóvel</option>
+            <option>Veículo</option>
+            <option>Saldo Bancário</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Valor Estimado (R$)</label>
+          <input type="number" class="form-control" name="estimatedValue" [(ngModel)]="newAsset.estimatedValue" required>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary w-100">Adicionar Bem</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <h4>Meus Bens Cadastrados</h4>
+  <table class="table table-striped table-hover mt-3">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Valor Estimado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let asset of assets">
+        <td>{{ asset.name }}</td>
+        <td>
+          <span class="badge bg-secondary" *ngIf="asset.type === 0">Imóvel</span>
+          <span class="badge bg-secondary" *ngIf="asset.type === 1">Veículo</span>
+          <span class="badge bg-secondary" *ngIf="asset.type === 2">Saldo Bancário</span>
+          <span class="badge bg-secondary" *ngIf="asset.type === 3">Outro</span>
+        </td>
+        <td>{{ asset.estimatedValue | currency:'BRL' }}</td>
+      </tr>
+      <tr *ngIf="assets.length === 0">
+        <td colspan="3" class="text-center">Nenhum bem cadastrado.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

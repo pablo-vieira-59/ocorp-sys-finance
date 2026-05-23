@@ -1,0 +1,175 @@
+<div class="row mt-0 mx-0 bg-white shadow top-bar">
+  <div class="col-lg-8 col-6 d-flex m-0">
+    <h2 class="my-auto">Despesas</h2>
+  </div>
+  <div class="col-lg-4 col-6 text-end d-flex">
+    <button (click)="showCreateModal = true" class="my-auto w-100 btn btn-primary">+ Adicionar Despesa</button>
+  </div>
+</div>
+
+<div class="p-4" style="margin-top: 100px;">
+  <div class="row">
+    <div class="col-lg-4 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white">
+        <label class="col-12 fw-bold fs-7 f-muted">Depesas mensais</label>
+        <label class="col-12 fs-2 fw-bold text-danger">{{mothlyExpense.totalExpenses | currency:'BRL' }}</label>
+        <label class="col-12 fs-7">{{mothlyExpense.percentalOfIncome | percent}} da renda total</label>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white">
+        <label class="col-12 fw-bold fs-7 f-muted">Maior custo</label>
+        <label class="col-12 fs-2 fw-bold text-warning">{{highestCost.amount | currency:'BRL'}}</label>
+        <label class="col-12 fs-7">{{highestCost.category}}</label>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white">
+        <label class="col-12 fw-bold fs-7 f-muted">Categoria mais cara</label>
+        <label class="col-12 fs-2 fw-bold text-primary">{{mostExpensiveCategory.category}}</label>
+        <label class="col-12 fs-7">{{mostExpensiveCategory.percentual | percent}} do total</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <label class="col-12 fw-bold fs-7 f-muted">Visão geral</label>
+        <div *ngIf="expenses.length > 0">
+          <apx-chart class="mx-auto" *ngIf="topItemsChartOptions" [series]="topItemsChartOptions.series"
+            [chart]="topItemsChartOptions.chart" [labels]="topItemsChartOptions.labels"
+            [responsive]="topItemsChartOptions.responsive" [theme]="topItemsChartOptions.theme">
+          </apx-chart>
+        </div>
+        <div *ngIf="expenses.length <= 0">
+          <div class="mt-4 alert alert-info">
+            Adicione uma despesa para visualizar.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <label class="col-12 fw-bold fs-7 f-muted">Top Categorias</label>
+
+        <div *ngIf="expenses.length > 0">
+          <apx-chart *ngIf="topCategoriesChartOptions" [series]="topCategoriesChartOptions.series"
+            [chart]="topCategoriesChartOptions.chart" [xaxis]="topCategoriesChartOptions.xaxis"
+            [yaxis]="topCategoriesChartOptions.yaxis" [plotOptions]="topCategoriesChartOptions.plotOptions"
+            [dataLabels]="topCategoriesChartOptions.dataLabels" [grid]="topCategoriesChartOptions.grid"
+            [tooltip]="topCategoriesChartOptions.tooltip" [legend]="topCategoriesChartOptions.legend"
+            [theme]="topCategoriesChartOptions.theme">
+          </apx-chart>
+        </div>
+
+        <div *ngIf="expenses.length <= 0">
+          <div class="mt-4 alert alert-info">
+            Adicione uma despesa para visualizar.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white">
+        <label class="col-12 fw-bold fs-7 f-muted">Depesas</label>
+        <div class="table-wrapper border mt-2" style="overflow-x: auto;">
+          <table class="table table-striped custom-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Valor</th>
+                <th class="text-end">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let expense of expenses">
+                <td class="fw-semibold">{{expense.description}}</td>
+                <td class="fw-semibold">{{expense.category}}</td>
+                <td class="fw-semibold text-success">{{expense.amount | currency:'BRL'}}</td>
+                <td class="text-end text-nowrap">
+                  <button (click)="editExpense(expense)" class="btn btn-primary btn-sm">Editar</button>
+                  <button (click)="deleteExpense(expense)" class="ms-2 btn btn-danger btn-sm">Excluir</button>
+                </td>
+              </tr>
+              <tr *ngIf="expenses.length === 0">
+                <td colspan="5" class="text-center text-muted">Nenhuma despesa encontrada.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div *ngIf="showCreateModal" class="modal-overlay" id="modalOverlay">
+  <div class="modal p-4">
+
+    <span class="modal-close" (click)="showCreateModal = false">&times;</span>
+
+    <div class="col-12 fw-bold fs-4">
+      Nova Despesa
+    </div>
+    <div class="col-12 fs-7 text-muted text-nowrap">
+      Adicione um nova despesa mensal
+    </div>
+
+    <div class="row">
+      <div class="col-12 text-muted fw-bold fs-7 text-start">
+        <label>Descrição</label>
+      </div>
+      <div class="col-12 d-flex">
+        <input [(ngModel)]="expenseToAdd.description" type="text" placeholder="Digite uma descrição ..."
+          class="form-control">
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-muted fw-bold fs-7 text-start">
+        <label>Categoria</label>
+      </div>
+      <div class="col-12 d-flex">
+        <select [(ngModel)]="expenseToAdd.category" class="form-select">
+          <option>Alimentação</option>
+          <option>Compras</option>
+          <option>Educação</option>
+          <option>Lazer</option>
+          <option>Pessoal</option>
+          <option>Moradia</option>
+          <option>Saúde</option>
+          <option>Transporte</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-muted fw-bold fs-7 text-start">
+        <label>Valor</label>
+      </div>
+      <div class="col-12 d-flex">
+        <input [(ngModel)]="expenseToAdd.amount" type="number" placeholder="Digite uma descrição ..."
+          class="form-control">
+      </div>
+    </div>
+
+    <div class="row m-0 mt-4" *ngIf="error">
+      <span class="col-12 alert alert-danger text-start">
+        {{error}}
+      </span>
+    </div>
+
+    <div class="col-12 mt-4">
+      <button (click)="addExpense()" class="w-100 btn btn-primary">Salvar</button>
+    </div>
+  </div>
+</div>

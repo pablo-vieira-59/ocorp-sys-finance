@@ -1,0 +1,54 @@
+<button class="btn btn-secondary mobile-toggle" (click)="toggleSidebar()">
+    ☰
+</button>
+
+<div class="sidebar" [class.sidebar-open]="isOpen">
+    <div class="text-center development-tag" *ngIf="env == 'Development'">
+        {{env}}
+    </div>
+
+    <div class="sidebar-header">
+        <img class="img-fluid" src="/assets/images/logo-black.png">
+    </div>
+
+    <ul class="sidebar-menu">
+        <li>
+            <a routerLink="/login" (click)="closeSidebar()">
+                Login
+            </a>
+        </li>
+
+        <li>
+            <a routerLinkActive="active-link" routerLink="/dashboard" (click)="closeSidebar()">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a routerLinkActive="active-link" routerLink="/income" (click)="closeSidebar()">
+                Renda
+            </a>
+        </li>
+
+        <li>
+            <a routerLinkActive="active-link" routerLink="/expenses" (click)="closeSidebar()">
+                Despesas
+            </a>
+        </li>
+
+        <li>
+            <a routerLinkActive="active-link" routerLink="/investments" (click)="closeSidebar()">
+                Investimentos
+            </a>
+        </li>
+
+        <li>
+            <a routerLinkActive="active-link" routerLink="/assets" (click)="closeSidebar()">
+                Patrimônio
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+<div class="sidebar-backdrop" *ngIf="isOpen" (click)="closeSidebar()"></div>

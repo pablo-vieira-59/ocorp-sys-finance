@@ -1,0 +1,101 @@
+<div class="row justify-content-center mt-5 p-4">
+  <div class="col" style="max-width: 640px;">
+    <div class="shadow rounded-4 row">
+
+      <div class="col-md-5 d-none d-md-flex flex-column p-4 bg-light-1 left-panel">
+
+        <div class="mx-auto text-center">
+          <img style="width: 128px;" src="/assets/images/logo-black.png">
+        </div>
+
+        <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+          <img class="img-fluid" src="/assets/images/register.png">
+        </div>
+
+      </div>
+
+      <div class="col-md-7 col-12 p-4">
+        <div class="mx-auto text-center d-block d-md-none">
+          <img style="width: 128px;" src="/assets/images/logo-black.png">
+        </div>
+        <h5 class="mt-4 fw-bold">Crie sua conta</h5>
+        <p class="fs-7 f-muted fw-bold">Inicie sua jornada no sistema inteligente de gerenciamento de finanças</p>
+
+        <div class="row">
+          <div class="col-12">
+            <label class="fs-7 fw-bold">Nome completo</label>
+          </div>
+          <div class="col-12">
+            <input id="name" [disabled]="isLoading" [(ngModel)]="data.name" class="form-control" type="text"
+              placeholder="Digite seu nome...">
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-12">
+            <label class="fs-7 fw-bold">Email</label>
+          </div>
+          <div class="col-12">
+            <input id="email" [disabled]="isLoading" [(ngModel)]="data.email" class="form-control" type="text"
+              placeholder="Digite seu email...">
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-12">
+            <label class="fs-7 fw-bold">Senha</label>
+          </div>
+          <div class="col-12">
+            <input id="password" [disabled]="isLoading" [(ngModel)]="data.password" class="form-control" type="password"
+              placeholder="Digite sua senha...">
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-12">
+            <label class="fs-7 fw-bold">Confirme sua senha</label>
+          </div>
+          <div class="col-12">
+            <input id="password-confirmation" [disabled]="isLoading" [(ngModel)]="data.passwordConfirmation"
+              class="form-control" type="password" placeholder="Digite sua senha...">
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 fs-7">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="checkDefault" [disabled]="isLoading"
+                [(ngModel)]="data.terms">
+              <label class="form-check-label" for="checkDefault">
+                Eu concordo com os <a href="#" class="fw-bold">Termos de serviço</a> e <a href="#"
+                  class="fw-bold">Politicas de privacidade</a>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 text-center">
+            <button [disabled]="isLoading" (click)="register()" class="btn btn-primary w-100">
+              <div *ngIf="isLoading" class="spinner-border spinner-border-sm">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              Registrar
+            </button>
+          </div>
+        </div>
+
+        <div class="row mt-4 mx-0" *ngIf="error">
+          <span class="w-100 alert alert-danger">{{error}}</span>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 text-center">
+            <p>Ja tem conta? <a href="/login" class="fw-bold">Login</a></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

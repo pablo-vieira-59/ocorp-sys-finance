@@ -1,0 +1,6 @@
+@SysFinance.API_HostAddress = http://localhost:5088
+
+GET {{SysFinance.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

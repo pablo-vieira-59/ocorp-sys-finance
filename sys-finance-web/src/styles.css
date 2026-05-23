@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.bg-light-1 {
+  background-color: #F5F8FE;
+}
+
+.fs-7 {
+  font-size: 14px;
+}
+
+.f-muted {
+  color: #8b8b8b;
+}
+
+.table-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e0e4e8 !important;
+}
+
+.custom-table {
+  margin: 0;
+
+  thead tr th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+    border-bottom: 2px solid #e0e4e8;
+  }
+
+  tbody tr {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    td {
+      font-size: 14px;
+      padding: 4px 8px;
+      vertical-align: middle;
+      color: #212529;
+      border-bottom: 1px solid #e0e4e8;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 32px;
+  z-index: 1200;
+}
+
+.modal {
+  position: relative;
+  display: inline;
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  text-align: center;
+  overflow: auto;
+  color: #000;
+  height: fit-content;
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+  .modal {
+    max-width: 90%;
+    max-height: 80vh;
+    padding: 12px;
+  }
+}
+
+/* Tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+  .modal {
+    max-width: 500px;
+    max-height: 85vh;
+  }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .modal {
+    max-width: 700px;
+    max-height: 90vh;
+  }
+}
+
+/* Botão fechar */
+.modal-close {
+  float: inline-end;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.stretch {
+  height: stretch !important;
+}
+
+.top-bar {
+  position: fixed;
+  top: 0;
+  padding: 16px;
+  z-index: 1099;
+  width: calc(100% - 250px);
+  height: 100px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+  .top-bar {
+    padding-left: 64px;
+    width: 100%;
+  }
+}
+
+.hoverble:hover{
+  border-color: gray;
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}

@@ -1,0 +1,184 @@
+<div class="row mt-0 mx-0 bg-white shadow top-bar">
+    <div class="col-lg-8 col-6 d-flex m-0">
+        <h2 class="my-auto">Renda</h2>
+    </div>
+    <div class="col-lg-4 col-6 text-end d-flex">
+        <button (click)="showAddModal = true;" class="w-100 btn btn-primary my-auto">+ Adicionar Renda</button>
+    </div>
+</div>
+
+<div class="p-4" style="margin-top: 100px;">
+    <div class="row">
+        <div class="col-lg-4 col-12 p-2 ">
+            <div class="border rounded-4 p-4 bg-white stretch">
+                <label class="col-12 fw-bold fs-7 f-muted">Renda mensal</label>
+                <label class="col-12 fs-2 fw-bold text-success">{{dashboard.totalValue| currency:'BRL' }}</label>
+                <label class="col-12 fs-7">Valor Liquido : <b class="fw-bold">{{dashboard.liquidValue | currency:'BRL' }}</b></label>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-12 p-2">
+            <div class="border rounded-4 p-4 bg-white stretch">
+                <label class="col-12 fw-bold fs-7 f-muted">Maior Renda</label>
+                <label class="col-12 fs-2 fw-bold text-primary">{{dashboard.topIncome | currency:'BRL' }}</label>
+                <label class="col-12 fs-7">{{dashboard.topIncomeName }}</label>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-12 p-2">
+            <div class="border rounded-4 p-4 bg-white stretch">
+                <label class="col-12 fw-bold fs-7 f-muted">Saldo após despesas</label>
+                <label class="col-12 fs-2 fw-bold text-warning">{{dashboard.totalAfterDiscounts | currency:'BRL' }}</label>
+                <label class="col-12 fs-7">{{dashboard.percentualAfterDiscounts | percent}} da renda liquida total</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-12 p-2">
+            <div class="border rounded-4 p-4 bg-white stretch">
+                <label class="col-12 fw-bold fs-7 f-muted">Visão geral</label>
+                <div *ngIf="incomes.length > 0">
+                    <apx-chart class="mx-auto" *ngIf="incomeChartOptions" [series]="incomeChartOptions.series"
+                        [chart]="incomeChartOptions.chart" [labels]="incomeChartOptions.labels"
+                        [responsive]="incomeChartOptions.responsive" [theme]="incomeChartOptions.theme">
+                    </apx-chart>
+                </div>
+                <div *ngIf="incomes.length <= 0">
+                    <div class="mt-4 alert alert-info">
+                        Adicione uma renda para visualizar.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-12 p-2 ">
+            <div class="border rounded-4 p-4 bg-white stretch">
+                <label class="col-12 fw-bold fs-7 f-muted">Salário (CLT)</label>
+
+                <div class="table-wrapper border mt-2" style="overflow-x: auto;">
+                    <table class="table table-striped custom-table">
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="fw-semibold">Valor Bruto</td>
+                                <td class="fw-semibold text-success">{{discounts.totalValue | currency:'BRL'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">INSS</td>
+                                <td class="fw-semibold text-danger">{{discounts.inss | currency:'BRL'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">IRRF</td>
+                                <td class="fw-semibold text-danger">{{discounts.irrf | currency:'BRL'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">Valor Liquido</td>
+                                <td class="fw-semibold text-success">{{discounts.finalValue | currency:'BRL'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-12 p-2">
+            <div class="border rounded-4 p-4 bg-white">
+                <label class="col-12 fw-bold fs-7 f-muted">Fontes de Renda</label>
+                <div class="table-wrapper border mt-2" style="overflow-x: auto;">
+                    <table class="table table-striped custom-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Valor</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let income of incomes">
+                                <td class="fw-semibold">{{income.description}}</td>
+                                <td class="fw-semibold">{{income.type}}</td>
+                                <td class="fw-semibold text-success">{{income.amount | currency:'BRL'}}</td>
+                                <td class="text-end text-nowrap">
+                                    <button (click)="editIncome(income)"
+                                        class="btn btn-primary btn-sm">Editar</button>
+                                    <button (click)="deleteIncome(income)"
+                                        class="ms-2 btn btn-danger btn-sm">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="incomes.length === 0">
+                                <td colspan="5" class="text-center text-muted">Nenhuma fonte de renda encontrada.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showAddModal" class="modal-overlay" id="modalOverlay">
+  <div class="modal p-4">
+
+    <span class="modal-close" (click)="showAddModal = false">&times;</span>
+
+    <div class="col-12 fw-bold fs-4">
+      Nova fonte de renda
+    </div>
+    <div class="col-12 fs-7 text-muted text-nowrap">
+      Adicione um nova fonte de renda mensal
+    </div>
+
+    <div class="row">
+      <div class="col-12 text-muted fw-bold fs-7 text-start">
+        <label>Descrição</label>
+      </div>
+      <div class="col-12 d-flex">
+        <input [(ngModel)]="incomeToAdd.description" type="text" placeholder="Digite uma descrição ..."
+          class="form-control">
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-muted fw-bold fs-7 text-start">
+        <label>Categoria</label>
+      </div>
+      <div class="col-12 d-flex">
+        <select [(ngModel)]="incomeToAdd.type" class="form-select">
+          <option>Salário CLT</option>
+          <option>Salário PJ</option>
+          <option>Lucro de Empresa</option>
+          <option>Freelance</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-muted fw-bold fs-7 text-start">
+        <label>Valor</label>
+      </div>
+      <div class="col-12 d-flex">
+        <input [(ngModel)]="incomeToAdd.amount" type="number" placeholder="Digite uma descrição ..."
+          class="form-control">
+      </div>
+    </div>
+
+    <div class="row m-0 mt-4" *ngIf="error">
+      <span class="col-12 alert alert-danger text-start">
+        {{error}}
+      </span>
+    </div>
+
+    <div class="col-12 mt-4">
+      <button (click)="addIncome()" class="w-100 btn btn-primary">Salvar</button>
+    </div>
+  </div>
+</div>

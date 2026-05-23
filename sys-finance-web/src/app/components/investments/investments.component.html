@@ -1,0 +1,42 @@
+<div class="row mt-0 mx-0 bg-white shadow top-bar">
+  <div class="col-lg-8 col-6 d-flex m-0">
+    <h2 class="my-auto">Investimentos</h2>
+  </div>
+  <!-- <div class="col-lg-4 col-6 text-end">
+        <button (click)="showAddModal = true;" class="w-100 btn btn-primary">+ Adicionar Renda</button>
+    </div> -->
+</div>
+
+<div style="margin-top: 100px;">
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <form (submit)="add()" class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-control" name="name" [(ngModel)]="newItem.name" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Tipo (CDB, Ações...)</label>
+          <input type="text" class="form-control" name="type" [(ngModel)]="newItem.type" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Valor Aplicado</label>
+          <input type="number" class="form-control" name="inv" [(ngModel)]="newItem.investedAmount" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Valor Atual</label>
+          <input type="number" class="form-control" name="cur" [(ngModel)]="newItem.currentValue" required>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button type="submit" class="btn btn-success w-100">Adicionar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead><tr><th>Nome</th><th>Tipo</th><th>Aplicado</th><th>Atual</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let item of items"><td>{{ item.name }}</td><td>{{ item.type }}</td><td>{{ item.investedAmount | currency:'BRL' }}</td><td class="text-success">{{ item.currentValue | currency:'BRL' }}</td></tr>
+    </tbody>
+  </table>
+</div>

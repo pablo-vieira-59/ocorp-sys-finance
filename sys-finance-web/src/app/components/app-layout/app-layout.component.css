@@ -1,0 +1,17 @@
+.app-main {
+    margin-left: 250px;
+    width: 100%;
+    background-color: #FAFBFE;
+}
+
+.app-content{
+    
+}
+
+@media (max-width: 800px) {
+    .app-main {
+        margin-left: 0px;
+        width: 100%;
+    }
+
+}

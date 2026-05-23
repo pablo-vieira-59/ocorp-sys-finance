@@ -1,0 +1,81 @@
+<div class="row justify-content-center mt-5 p-4">
+  <div class="col" style="max-width: 640px;">
+    <div class="shadow rounded-4 row bg-white">
+
+      <div class="col-md-5 d-none d-md-block p-4 bg-light-1 left-panel">
+        <div class="mx-auto text-center">
+          <img style="width: 128px;" src="/assets/images/logo-black.png">
+        </div>
+
+        <p class="mt-4 mb-0">Adiministre seu dinheiro.</p>
+        <p>Construa seu futuro.</p>
+
+        <img class="img-fluid" src="/assets/images/login.png">
+      </div>
+
+      <div class="col-md-7 col-12 p-4">
+        <div class="mx-auto text-center d-block d-md-none">
+          <img style="width: 128px;" src="/assets/images/logo-black.png">
+        </div>
+        <h5 class="mt-4 fw-bold">Bem vindo de volta</h5>
+        <p class="fs-7 f-muted fw-bold">Faça o login e continue para sua conta</p>
+
+        <div class="row">
+          <div class="col-12">
+            <label class="fs-7 fw-bold">Email</label>
+          </div>
+          <div class="col-12">
+            <input [disabled]="isLoading" [(ngModel)]="credentials.email" class="form-control" type="text"
+              placeholder="Digite seu email...">
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12">
+            <label class="fs-7 fw-bold">Senha</label>
+          </div>
+          <div class="col-12">
+            <input [disabled]="isLoading" [(ngModel)]="credentials.password" class="form-control" type="password"
+              placeholder="Digite sua senha...">
+          </div>
+          <div class="col-12 text-end mt-2">
+            <a href="#" class="fs-7 fw-bold">Esqueceu a senha?</a>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 fs-7">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="checkDefault" [disabled]="isLoading">
+              <label class="form-check-label" for="checkDefault">
+                Lembrar de mim
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 text-center">
+            <button [disabled]="isLoading" (click)="login()" class="btn btn-primary w-100">
+              <div *ngIf="isLoading" class="spinner-border spinner-border-sm">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              Entrar
+            </button>
+          </div>
+        </div>
+
+        <div class="row mt-4 mx-0" *ngIf="error">
+          <span class="w-100 alert alert-danger">{{error}}</span>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 text-center">
+            <p class="fs-7">Não tem uma conta? <a class="fw-bold" href="/register">Registre-se</a></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
