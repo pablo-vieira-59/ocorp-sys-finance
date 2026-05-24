@@ -8,11 +8,20 @@ using SysFinance.Application.Interfaces;
 using SysFinance.Application.Services;
 using SysFinance.Domain.Interfaces;
 using SysFinance.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Fix for PostgreSQL DateTime issue
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+builder.WebHost.ConfigureKestrel(
+    options => { 
+        options.ListenAnyIP(8081); 
+        options.ListenAnyIP(8443, listenOptions => { 
+            listenOptions.UseHttps("C:\\https\\certificate.pfx", "123456"); 
+        }); 
+    });
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -93,7 +102,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowAngularApp");
 
