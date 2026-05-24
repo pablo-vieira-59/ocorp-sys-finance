@@ -29,7 +29,9 @@ if (builder.Environment.IsProduction())
 }
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+}); ;
 
 // Add Dependency Injection
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -100,14 +102,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
-
-app.Use(async (context, next) =>
-{
-    context.Response.Headers.ContentType =
-        "application/json; charset=utf-8";
-
-    await next();
-});
 
 if (app.Environment.IsDevelopment())
 {
