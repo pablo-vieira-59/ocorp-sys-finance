@@ -15,14 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Fix for PostgreSQL DateTime issue
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.WebHost.ConfigureKestrel(
-    options => { 
-        options.ListenAnyIP(8081); 
-        options.ListenAnyIP(8443, listenOptions => { 
-            listenOptions.UseHttps("C:\\https\\certificate.pfx", "123456"); 
-        }); 
-    });
-
 // Add services to the container.
 builder.Services.AddControllers();
 
