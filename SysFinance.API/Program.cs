@@ -99,13 +99,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.Encoder =
-        System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
-});
-
 var app = builder.Build();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.ContentType =
+        "application/json; charset=utf-8";
+
+    await next();
+});
 
 if (app.Environment.IsDevelopment())
 {
