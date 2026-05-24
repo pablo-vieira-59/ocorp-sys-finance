@@ -101,8 +101,10 @@ public class PatrimonySummaryDto
     public List<AssetHistory> AssetHistories { get; set; } = new();
 }
 
-public class AssetHistoryInputDto
+public class AssetHistoryDto
 {
+    public Guid? Id { get; set; }
+    public Guid UserId { get; set; }
     public DateTime Date { get; set; }
     public decimal Amount { get; set; }
 }

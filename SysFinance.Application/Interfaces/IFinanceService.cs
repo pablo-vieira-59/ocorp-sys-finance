@@ -19,7 +19,7 @@ public interface IFinanceService
     Task<AssetDto> UpdateAssetAsync(Guid userId, Guid assetId, AssetDto assetDto);
     Task DeleteAssetAsync(Guid userId, Guid assetId);
 
-    Task AddAssetHistoryAsync(Guid userId, DateTime date, decimal amount);
+    Task AddAssetHistoryAsync(AssetHistoryDto dto);
     Task DeleteAssetHistoryAsync(Guid userId, Guid historyId);
     
     Task<PatrimonySummaryDto> GetPatrimonySummaryAsync(Guid userId);

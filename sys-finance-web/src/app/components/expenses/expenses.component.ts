@@ -70,6 +70,10 @@ export class ExpensesComponent implements OnInit {
   }
 
   calcDashboard() {
+    this.mothlyExpense = { totalExpenses: 0, percentalOfIncome: 0 }
+    this.highestCost = { amount: 0, category: '' }
+    this.mostExpensiveCategory = { category: '', percentual: 0 }
+    
     this.expenses.forEach(x => {
       this.mothlyExpense.totalExpenses += x.amount;
       if (x.amount > this.highestCost.amount) {
@@ -94,7 +98,7 @@ export class ExpensesComponent implements OnInit {
         e.forEach(x => {
           totalIncome += x.amount;
         });
-        this.mothlyExpense.percentalOfIncome = this.mothlyExpense.totalExpenses/totalIncome;
+        this.mothlyExpense.percentalOfIncome = this.mothlyExpense.totalExpenses / totalIncome;
       },
       error: (err) => {
         this.error = err.error?.message || 'Erro no login';

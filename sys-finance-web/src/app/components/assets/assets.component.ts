@@ -28,7 +28,7 @@ export class AssetsComponent implements OnInit {
   error = '';
 
   assetToAdd = {} as AssetDto;
-  historyToAdd = { date: new Date().toISOString().substring(0, 10), amount: 0 };
+  historyToAdd = {} as AssetHistoryDto;
 
   assetTypes = ['Imóvel', 'Veículo', 'Saldo Bancário', 'Outro'];
 
@@ -132,7 +132,7 @@ export class AssetsComponent implements OnInit {
 
   // ---- History CRUD ----
   openAddHistory() {
-    this.historyToAdd = { date: new Date().toISOString().substring(0, 10), amount: 0 };
+    this.historyToAdd = {} as AssetHistoryDto;
     this.showAddHistoryModal = true;
     this.error = '';
   }
@@ -158,6 +158,12 @@ export class AssetsComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  editHistory(h :AssetHistoryDto){
+    this.historyToAdd = h;
+    this.showAddHistoryModal = true;
+    this.error = '';
   }
 
   deleteHistory(history: AssetHistoryDto) {

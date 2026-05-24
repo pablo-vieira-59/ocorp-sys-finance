@@ -68,9 +68,10 @@ public class FinanceController : ControllerBase
     }
 
     [HttpPost("asset-history")]
-    public async Task<IActionResult> AddAssetHistory([FromBody] AssetHistoryInputDto dto)
+    public async Task<IActionResult> AddAssetHistory([FromBody] AssetHistoryDto dto)
     {
-        await _financeService.AddAssetHistoryAsync(GetUserId(), dto.Date, dto.Amount);
+        dto.UserId = GetUserId();
+        await _financeService.AddAssetHistoryAsync(dto);
         return Ok();
     }
 

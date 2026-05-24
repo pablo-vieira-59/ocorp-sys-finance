@@ -227,10 +227,25 @@ public class FinanceService : IFinanceService
         await _assetRepo.DeleteAsync(asset);
     }
 
-    public async Task AddAssetHistoryAsync(Guid userId, DateTime date, decimal amount)
+    public async Task AddAssetHistoryAsync(AssetHistoryDto dto)
     {
-        var history = new AssetHistory { UserId = userId, Date = date, Amount = amount };
-        await _assetHistoryRepo.AddAsync(history);
+        if(dto.Id == null)
+        {
+            var history = new AssetHistory { UserId = dto.UserId, Date = dto.Date, Amount = dto.Amount };
+            await _assetHistoryRepo.AddAsync(history);
+        }
+        else
+        {
+            var existingHistory = await _assetHistoryRepo.GetByIdAsync(dto.Id.Value);
+
+            if (existingHistory != null)
+            {
+                existingHistory.Date = dto.Date;
+                existingHistory.Amount = dto.Amount;
+
+                await _assetHistoryRepo.UpdateAsync(existingHistory);
+            }
+        }
     }
 
     public async Task DeleteAssetHistoryAsync(Guid userId, Guid historyId)

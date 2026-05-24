@@ -79,7 +79,7 @@ export class FinanceService {
   updateAsset(id: string, asset: AssetDto) { return this.http.put<AssetDto>(`${this.apiUrl}/assets/${id}`, asset); }
   deleteAsset(id: string) { return this.http.delete<any>(`${this.apiUrl}/assets/${id}`); }
 
-  addAssetHistory(data: { date: string, amount: number }) { return this.http.post<any>(`${this.apiUrl}/asset-history`, data); }
+  addAssetHistory(data: AssetHistoryDto) { return this.http.post<any>(`${this.apiUrl}/asset-history`, data); }
   deleteAssetHistory(id: string) { return this.http.delete<any>(`${this.apiUrl}/asset-history/${id}`); }
 
   getPatrimony() { return this.http.get<PatrimonySummaryDto>(`${this.apiUrl}/patrimony`); }

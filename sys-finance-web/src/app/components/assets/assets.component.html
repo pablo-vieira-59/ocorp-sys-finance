@@ -134,6 +134,7 @@
                 <td class="fw-semibold">{{h.date | date:'MM/yyyy'}}</td>
                 <td class="fw-semibold text-success">{{h.amount | currency:'BRL'}}</td>
                 <td class="text-end text-nowrap">
+                  <button (click)="editHistory(h)" class="btn btn-primary btn-sm me-2">Editar</button>
                   <button (click)="deleteHistory(h)" class="btn btn-danger btn-sm">Excluir</button>
                 </td>
               </tr>
@@ -147,7 +148,7 @@
     </div>
 
     <div class="col-lg-4 col-12 p-2">
-      <div class="border rounded-4 p-4 bg-white stretch">
+      <div class="border rounded-4 p-4 bg-white">
         <label class="col-12 fw-bold fs-7 f-muted">Ações</label>
         <label class="col-12 fs-7 mt-2">Registre a evolução mensal do seu patrimônio</label>
         <button (click)="openAddHistory()" class="btn btn-outline-primary btn-sm mt-2 w-100">+ Registrar
@@ -225,7 +226,8 @@
     <div class="row mt-4">
       <div class="col-12 text-muted fw-bold fs-7 text-start"><label>Data (Mês/Ano)</label></div>
       <div class="col-12 d-flex">
-        <input [(ngModel)]="historyToAdd.date" type="date" class="form-control">
+        <input [ngModel]="historyToAdd.date | date:'yyyy-MM-dd'" (ngModelChange)="historyToAdd.date = $event"
+          type="date" class="form-control" />
       </div>
     </div>
 
