@@ -99,6 +99,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Encoder =
+        System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
