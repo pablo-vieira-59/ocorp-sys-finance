@@ -77,13 +77,38 @@ public class FinanceService : IFinanceService
     public async Task<IEnumerable<InvestmentDto>> GetInvestmentsAsync(Guid userId)
     {
         var investments = await _investmentRepo.FindAsync(i => i.UserId == userId);
-        return investments.Select(i => new InvestmentDto(i.Id, i.Name, i.Type, i.InvestedAmount, i.CurrentValue, i.Date));
+        return investments.Select(i => new InvestmentDto(i.Id, i.Name, i.Type, i.InvestedAmount, i.CurrentValue, i.MonthlyDividendYield, i.Date));
     }
 
     public async Task<InvestmentDto> AddInvestmentAsync(Guid userId, InvestmentDto dto)
     {
-        var investment = new Investment { UserId = userId, Name = dto.Name, Type = dto.Type, InvestedAmount = dto.InvestedAmount, CurrentValue = dto.CurrentValue, Date = dto.Date };
+        var investment = new Investment { UserId = userId, Name = dto.Name, Type = dto.Type, InvestedAmount = dto.InvestedAmount, CurrentValue = dto.CurrentValue, MonthlyDividendYield = dto.MonthlyDividendYield, Date = dto.Date };
         await _investmentRepo.AddAsync(investment);
+
+        if (dto.MonthlyDividendYield > 0)
+        {
+            var calculatedAmount = dto.CurrentValue * (dto.MonthlyDividendYield / 100.0m);
+            var existingIncome = (await _incomeRepo.FindAsync(i => i.UserId == userId && i.Description == dto.Name)).FirstOrDefault();
+            if (existingIncome != null)
+            {
+                existingIncome.Amount = calculatedAmount;
+                existingIncome.Type = "Investimentos";
+                await _incomeRepo.UpdateAsync(existingIncome);
+            }
+            else
+            {
+                var newIncome = new Income
+                {
+                    UserId = userId,
+                    Description = dto.Name,
+                    Amount = calculatedAmount,
+                    Type = "Investimentos",
+                    Discounts = 0
+                };
+                await _incomeRepo.AddAsync(newIncome);
+            }
+        }
+
         return dto with { Id = investment.Id };
     }
 
@@ -92,14 +117,74 @@ public class FinanceService : IFinanceService
         var investment = (await _investmentRepo.FindAsync(i => i.Id == investmentId && i.UserId == userId)).FirstOrDefault();
         if (investment == null) throw new InvalidOperationException("Investment not found");
 
+        var oldName = investment.Name;
+
         investment.Name = dto.Name;
         investment.Type = dto.Type;
         investment.InvestedAmount = dto.InvestedAmount;
         investment.CurrentValue = dto.CurrentValue;
         investment.Date = dto.Date;
+        investment.MonthlyDividendYield = dto.MonthlyDividendYield;
 
         await _investmentRepo.UpdateAsync(investment);
+
+        var existingIncome = (await _incomeRepo.FindAsync(i => i.UserId == userId && i.Description == oldName)).FirstOrDefault();
+
+        if (existingIncome != null)
+        {
+            if (dto.MonthlyDividendYield > 0)
+            {
+                var calculatedAmount = dto.CurrentValue * (dto.MonthlyDividendYield / 100.0m);
+                existingIncome.Description = dto.Name;
+                existingIncome.Amount = calculatedAmount;
+                existingIncome.Type = "Investimentos";
+                await _incomeRepo.UpdateAsync(existingIncome);
+            }
+            else
+            {
+                await _incomeRepo.DeleteAsync(existingIncome);
+            }
+        }
+        else if (dto.MonthlyDividendYield > 0)
+        {
+            var calculatedAmount = dto.CurrentValue * (dto.MonthlyDividendYield / 100.0m);
+            var duplicateIncome = (await _incomeRepo.FindAsync(i => i.UserId == userId && i.Description == dto.Name)).FirstOrDefault();
+            if (duplicateIncome != null)
+            {
+                duplicateIncome.Amount = calculatedAmount;
+                duplicateIncome.Type = "Investimentos";
+                await _incomeRepo.UpdateAsync(duplicateIncome);
+            }
+            else
+            {
+                var newIncome = new Income
+                {
+                    UserId = userId,
+                    Description = dto.Name,
+                    Amount = calculatedAmount,
+                    Type = "Investimentos",
+                    Discounts = 0
+                };
+                await _incomeRepo.AddAsync(newIncome);
+            }
+        }
+
         return dto with { Id = investment.Id };
+    }
+
+    public async Task DeleteInvestmentAsync(Guid userId, Guid investmentId)
+    {
+        var investment = (await _investmentRepo.FindAsync(i => i.Id == investmentId && i.UserId == userId)).FirstOrDefault();
+        if (investment == null) throw new InvalidOperationException("Investment not found");
+
+        var name = investment.Name;
+        await _investmentRepo.DeleteAsync(investment);
+
+        var existingIncome = (await _incomeRepo.FindAsync(i => i.UserId == userId && i.Description == name)).FirstOrDefault();
+        if (existingIncome != null)
+        {
+            await _incomeRepo.DeleteAsync(existingIncome);
+        }
     }
 
     public async Task<IEnumerable<AssetDto>> GetAssetsAsync(Guid userId)
@@ -119,6 +204,40 @@ public class FinanceService : IFinanceService
         var asset = new Asset { UserId = userId, Name = dto.Name, Description = dto.Description, EstimatedValue = dto.EstimatedValue, Type = dto.Type };
         await _assetRepo.AddAsync(asset);
         return new AssetDto { Id = asset.Id};
+    }
+
+    public async Task<AssetDto> UpdateAssetAsync(Guid userId, Guid assetId, AssetDto dto)
+    {
+        var asset = (await _assetRepo.FindAsync(a => a.Id == assetId && a.UserId == userId)).FirstOrDefault();
+        if (asset == null) throw new InvalidOperationException("Asset not found");
+
+        asset.Name = dto.Name;
+        asset.Description = dto.Description;
+        asset.EstimatedValue = dto.EstimatedValue;
+        asset.Type = dto.Type;
+
+        await _assetRepo.UpdateAsync(asset);
+        return new AssetDto { Id = asset.Id, Name = asset.Name, Description = asset.Description, EstimatedValue = asset.EstimatedValue, Type = asset.Type };
+    }
+
+    public async Task DeleteAssetAsync(Guid userId, Guid assetId)
+    {
+        var asset = (await _assetRepo.FindAsync(a => a.Id == assetId && a.UserId == userId)).FirstOrDefault();
+        if (asset == null) throw new InvalidOperationException("Asset not found");
+        await _assetRepo.DeleteAsync(asset);
+    }
+
+    public async Task AddAssetHistoryAsync(Guid userId, DateTime date, decimal amount)
+    {
+        var history = new AssetHistory { UserId = userId, Date = date, Amount = amount };
+        await _assetHistoryRepo.AddAsync(history);
+    }
+
+    public async Task DeleteAssetHistoryAsync(Guid userId, Guid historyId)
+    {
+        var history = await _assetHistoryRepo.GetByIdAsync(historyId);
+        if (history == null || history.UserId != userId) throw new InvalidOperationException("History not found");
+        await _assetHistoryRepo.DeleteAsync(history);
     }
 
     public async Task<List<AssetHistory>> GetAssetHistoryAsync(Guid userId)
@@ -165,7 +284,18 @@ public class FinanceService : IFinanceService
 
         if (existingIncome != null)
         {
+            var userId = existingIncome.UserId;
+            var description = existingIncome.Description;
+
             await _incomeRepo.DeleteAsync(existingIncome);
+
+            // Find investment with this name for this user and zero its dividend yield rate
+            var investment = (await _investmentRepo.FindAsync(i => i.UserId == userId && i.Name == description)).FirstOrDefault();
+            if (investment != null)
+            {
+                investment.MonthlyDividendYield = 0;
+                await _investmentRepo.UpdateAsync(investment);
+            }
         }
     }
 

@@ -38,8 +38,9 @@ export class RegisterComponent {
         }
       });
     }
-
-    this.isLoading = false;
+    else{
+      this.isLoading = false;
+    }
   }
 
   validateForm() {

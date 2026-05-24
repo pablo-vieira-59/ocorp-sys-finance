@@ -26,7 +26,9 @@ export interface InvestmentDto{
   investedAmount:number,
   currentValue:number,
   date :Date,
-  category:string
+  type:string,
+  monthlyDividendYield:number,
+  monthlyDividendYeild?:number
 }
 
 export interface AssetDto{
@@ -69,9 +71,16 @@ export class FinanceService {
 
   getInvestments() { return this.http.get<any[]>(`${this.apiUrl}/investments`); }
   addInvestment(investment: any) { return this.http.post<any>(`${this.apiUrl}/investments`, investment); }
+  updateInvestment(id: string, investment: any) { return this.http.put<any>(`${this.apiUrl}/investments/${id}`, investment); }
+  deleteInvestment(id: string) { return this.http.delete<any>(`${this.apiUrl}/investments/${id}`); }
 
-  getAssets() { return this.http.get<any[]>(`${this.apiUrl}/assets`); }
+  getAssets() { return this.http.get<AssetDto[]>(`${this.apiUrl}/assets`); }
   addAsset(asset: AssetDto) { return this.http.post<AssetDto>(`${this.apiUrl}/assets`, asset); }
+  updateAsset(id: string, asset: AssetDto) { return this.http.put<AssetDto>(`${this.apiUrl}/assets/${id}`, asset); }
+  deleteAsset(id: string) { return this.http.delete<any>(`${this.apiUrl}/assets/${id}`); }
+
+  addAssetHistory(data: { date: string, amount: number }) { return this.http.post<any>(`${this.apiUrl}/asset-history`, data); }
+  deleteAssetHistory(id: string) { return this.http.delete<any>(`${this.apiUrl}/asset-history/${id}`); }
 
   getPatrimony() { return this.http.get<PatrimonySummaryDto>(`${this.apiUrl}/patrimony`); }
 

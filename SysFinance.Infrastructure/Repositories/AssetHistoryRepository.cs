@@ -11,7 +11,10 @@ public class AssetHistoryRepository : Repository<AssetHistory>, IAssetHistoryRep
 
     public async Task<List<AssetHistory>> GetAllByUserId(Guid userId)
     {
-        var histories = await _context.AssetHistories.Where(x => x.UserId == userId).ToListAsync();
+        var histories = await _context.AssetHistories
+            .Where(x => x.UserId == userId)
+            .OrderBy(x => x.Date)
+            .ToListAsync();
         return histories;
     }
 }

@@ -85,6 +85,44 @@
     </div>
 
     <div class="col-lg-6 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white stretch hoverble">
+        <label class="col-12 fw-bold fs-7 f-muted">Resumo Orçamentário</label>
+
+        <div class="d-flex flex-column stretch">
+          <div class="my-auto">
+            <div class="row">
+              <div class="col-6">
+                <label class="col-12 fs-7">Orçamento mensal</label>
+                <label class="col-12 fw-bold fs-5 ">{{patrimony.totalIncome | currency:'BRL'}}</label>
+              </div>
+              <div class="col-6">
+                <label class="col-12 fs-7">Utilizado</label>
+                <label class="col-12 fw-bold fs-5 text-danger">{{patrimony.totalExpenses | currency:'BRL'}}</label>
+              </div>
+            </div>
+
+            <div class="row mt-4 mx-0">
+              <div class="p-0 progress" role="progressbar" aria-label="Example" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100" style="height: 20px">
+                <div class="progress-bar bg-danger" [style]="getExpensesBarSize()"></div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <label class="col-12 fs-7">Disponivel</label>
+              <label class="col-12 fw-bold fs-5 text-success ">{{patrimony.totalIncome - patrimony.totalExpenses|
+                currency:'BRL'}}</label>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 col-12 p-2">
       <div class="border rounded-4 p-4 bg-white stretch hoverble" routerLink="/investments">
         <label class="col-12 fw-bold fs-7 f-muted">Distribuição do investimentos</label>
 

@@ -77,10 +77,19 @@ export class DashboardComponent implements OnInit {
     this.financeService.getPatrimony().subscribe({
       next: (data) => {
         this.patrimony = data;
+        if (this.patrimony && this.patrimony.assetHistories) {
+          this.patrimony.assetHistories.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        }
         console.log(data);
         this.initCharts();
       }
     });
+  }
+
+  getExpensesBarSize(){
+    var percentual = (this.patrimony.totalExpenses/this.patrimony.totalIncome) * 100;
+    if(percentual > 100) percentual = 100;
+    return "width:"+percentual.toString()+"%";
   }
 
   initCharts() {

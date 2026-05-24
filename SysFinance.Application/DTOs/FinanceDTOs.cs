@@ -3,7 +3,53 @@ using SysFinance.Domain.Entities;
 namespace SysFinance.Application.DTOs;
 
 public record ExpenseDto(Guid? Id, string Description, decimal Amount, DateTime Date, string Category);
-public record InvestmentDto(Guid Id, string Name, string Type, decimal InvestedAmount, decimal CurrentValue, DateTime Date);
+public record InvestmentDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Type { get; set; } = string.Empty;
+    public decimal InvestedAmount { get; set; }
+    public decimal CurrentValue { get; set; }
+    
+    private decimal _monthlyDividendYield;
+    public decimal MonthlyDividendYield 
+    { 
+        get => _monthlyDividendYield; 
+        set => _monthlyDividendYield = value; 
+    }
+    
+    public decimal MonthlyDividendYeild 
+    { 
+        get => _monthlyDividendYield; 
+        set => _monthlyDividendYield = value; 
+    }
+    
+    public DateTime Date { get; set; }
+
+    public InvestmentDto() { }
+
+    public InvestmentDto(Guid id, string name, string type, decimal investedAmount, decimal currentValue, decimal monthlyDividendYield, DateTime date)
+    {
+        Id = id;
+        Name = name;
+        Type = type;
+        InvestedAmount = investedAmount;
+        CurrentValue = currentValue;
+        MonthlyDividendYield = monthlyDividendYield;
+        Date = date;
+    }
+
+    public void Deconstruct(out Guid id, out string name, out string type, out decimal investedAmount, out decimal currentValue, out decimal monthlyDividendYield, out DateTime date)
+    {
+        id = Id;
+        name = Name;
+        type = Type;
+        investedAmount = InvestedAmount;
+        currentValue = CurrentValue;
+        monthlyDividendYield = MonthlyDividendYield;
+        date = Date;
+    }
+}
 
 public class AssetDto
 {
@@ -53,4 +99,10 @@ public class PatrimonySummaryDto
     public List<InvestmentDto> Investments { get; set; } = new();
     public List<AssetDto> Assets { get; set; } = new();
     public List<AssetHistory> AssetHistories { get; set; } = new();
+}
+
+public class AssetHistoryInputDto
+{
+    public DateTime Date { get; set; }
+    public decimal Amount { get; set; }
 }

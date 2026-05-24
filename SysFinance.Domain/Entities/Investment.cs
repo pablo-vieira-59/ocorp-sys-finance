@@ -7,6 +7,7 @@ public class Investment
     public string Type { get; set; } = string.Empty;
     public decimal InvestedAmount { get; set; }
     public decimal CurrentValue { get; set; }
+    public decimal MonthlyDividendYield { get; set; }
     public DateTime Date { get; set; }
 
     public Guid UserId { get; set; }

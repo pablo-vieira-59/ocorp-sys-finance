@@ -44,11 +44,42 @@ public class FinanceController : ControllerBase
     [HttpPut("investments/{id}")]
     public async Task<IActionResult> UpdateInvestment(Guid id, InvestmentDto dto) => Ok(await _financeService.UpdateInvestmentAsync(GetUserId(), id, dto));
 
+    [HttpDelete("investments/{id}")]
+    public async Task<IActionResult> DeleteInvestment(Guid id)
+    {
+        await _financeService.DeleteInvestmentAsync(GetUserId(), id);
+        return Ok();
+    }
+
     [HttpGet("assets")]
     public async Task<IActionResult> GetAssets() => Ok(await _financeService.GetAssetsAsync(GetUserId()));
 
     [HttpPost("assets")]
     public async Task<IActionResult> AddAsset(AssetDto dto) => Ok(await _financeService.AddAssetAsync(GetUserId(), dto));
+
+    [HttpPut("assets/{id}")]
+    public async Task<IActionResult> UpdateAsset(Guid id, AssetDto dto) => Ok(await _financeService.UpdateAssetAsync(GetUserId(), id, dto));
+
+    [HttpDelete("assets/{id}")]
+    public async Task<IActionResult> DeleteAsset(Guid id)
+    {
+        await _financeService.DeleteAssetAsync(GetUserId(), id);
+        return Ok();
+    }
+
+    [HttpPost("asset-history")]
+    public async Task<IActionResult> AddAssetHistory([FromBody] AssetHistoryInputDto dto)
+    {
+        await _financeService.AddAssetHistoryAsync(GetUserId(), dto.Date, dto.Amount);
+        return Ok();
+    }
+
+    [HttpDelete("asset-history/{id}")]
+    public async Task<IActionResult> DeleteAssetHistory(Guid id)
+    {
+        await _financeService.DeleteAssetHistoryAsync(GetUserId(), id);
+        return Ok();
+    }
 
     [HttpGet("patrimony")]
     public async Task<IActionResult> GetPatrimony() => Ok(await _financeService.GetPatrimonySummaryAsync(GetUserId()));
