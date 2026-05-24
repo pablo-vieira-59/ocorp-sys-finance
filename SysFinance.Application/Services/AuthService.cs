@@ -27,7 +27,7 @@ public class AuthService : IAuthService
         var user = await _userRepository.GetByEmailAsync(loginDto.Email);
         if (user == null || !BCryptNet.Verify(loginDto.Password, user.PasswordHash))
         {
-            throw new UnauthorizedAccessException("Usu·rio n„o encontrado.");
+            throw new UnauthorizedAccessException("Usu√°rio n√£o encontrado.");
         }
 
         var token = GenerateJwtToken(user);
@@ -39,7 +39,7 @@ public class AuthService : IAuthService
         var existingUser = await _userRepository.GetByEmailAsync(registerDto.Email);
         if (existingUser != null)
         {
-            throw new InvalidOperationException("Email j· cadastrado.");
+            throw new InvalidOperationException("Email j√° cadastrado.");
         }
 
         var user = new User
