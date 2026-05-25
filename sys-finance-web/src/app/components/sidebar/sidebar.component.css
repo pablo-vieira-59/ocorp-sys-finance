@@ -11,6 +11,7 @@
   border: solid;
   border-width: 0px 1px 0px 0px;
   border-color: #c0c0c0;
+  z-index: 999;
 }
 
 .sidebar-header {

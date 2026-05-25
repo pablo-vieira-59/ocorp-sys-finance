@@ -39,6 +39,7 @@ export interface FixedIncomeInvestmentDto{
 export interface VariableIncomeInvestmentDto{
   id :string,
   investmentId :string,
+  investedAmount:number,
   quantity:number,
   averagePrice:number,
   currentQuotePrice:number,

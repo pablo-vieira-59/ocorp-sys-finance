@@ -16,6 +16,28 @@ public class InvestmentDto
     public string Name { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty; 
     public DateTime CreatedAt { get; set; }
+    public FixedIncomeInvestmentDto? Fixed { get; set; }
+    public VariableIncomeInvestmentDto? Variable { get; set; }
+}
+
+public class FixedIncomeInvestmentDto
+{
+    public Guid? Id { get; set; }
+    public Guid? InvestmentId { get; set; }
+    public decimal InitialAmount { get; set; }
+    public decimal CurrentAmount { get; set; }
+    public decimal InterestRate { get; set; }
+}
+
+public class VariableIncomeInvestmentDto
+{
+    public Guid? Id { get; set; }
+    public Guid? InvestmentId { get; set; }
+    public decimal InvestedAmount { get; set; }
+    public decimal Quantity { get; set; }
+    public decimal AveragePrice { get; set; }
+    public decimal CurrentQuotePrice { get; set; }
+    public decimal MonthlyDividendYield { get; set; }
 }
 
 public class AssetDto

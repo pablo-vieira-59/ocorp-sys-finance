@@ -135,6 +135,7 @@ export class IncomeComponent implements OnInit {
 
   initCharts() {
     this.incomeChartOptions = {
+      tooltip : {},
       series: this.incomes.map(ti => ti.amount),
       chart: {
         type: 'donut',

@@ -132,6 +132,7 @@ export class ExpensesComponent implements OnInit {
 
   initCharts() {
     this.topItemsChartOptions = {
+      tooltip : {},
       series: this.expenses.map(ti => ti.amount),
       chart: {
         type: 'donut',

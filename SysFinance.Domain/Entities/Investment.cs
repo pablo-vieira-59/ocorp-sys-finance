@@ -9,4 +9,6 @@ public class Investment
 
     public Guid UserId { get; set; }
     public User? User { get; set; }
+    public FixedIncomeInvestment? Fixed { get; set; }
+    public VariableIncomeInvestment? Variable { get; set; }
 }

@@ -47,6 +47,7 @@ export type DonutChartOptions = {
   theme: ApexTheme;
   dataLabels: ApexDataLabels;
   legend: ApexLegend;
+  tooltip: ApexTooltip;
 };
 
 @Component({
@@ -194,6 +195,7 @@ export class DashboardComponent implements OnInit {
     };
 
     this.assetTypeChartOptions = {
+      tooltip : {},
       series: this.patrimony.assets.map(ti => ti.estimatedValue),
       chart: {
         type: 'donut',
@@ -230,6 +232,7 @@ export class DashboardComponent implements OnInit {
     };
 
     this.investmentTypeChartOptions = {
+      tooltip : {},
       series: this.patrimony.investments.map(ti => 0),
       chart: {
         type: 'donut',

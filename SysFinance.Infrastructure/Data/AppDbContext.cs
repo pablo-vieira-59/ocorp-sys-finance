@@ -13,6 +13,8 @@ public class AppDbContext : DbContext
     public DbSet<Asset> Assets { get; set; }
     public DbSet<Income> Incomes { get; set; }
     public DbSet<AssetHistory> AssetHistories { get; set; }
+    public DbSet<FixedIncomeInvestment> FixedIncomeInvestments { get; set; }
+    public DbSet<VariableIncomeInvestment> VariableIncomeInvestments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -11,6 +11,8 @@ public class FinanceService : IFinanceService
     private readonly IRepository<Investment> _investmentRepo;
     private readonly IRepository<Asset> _assetRepo;
     private readonly IRepository<Income> _incomeRepo;
+    private readonly IRepository<FixedIncomeInvestment> _fixedIncomeInvestmentRepo;
+    private readonly IRepository<VariableIncomeInvestment> _variableIncomeInvestmentRepo;
     private readonly IAssetHistoryRepository _assetHistoryRepo;
 
     public FinanceService(
@@ -18,6 +20,8 @@ public class FinanceService : IFinanceService
         IRepository<Investment> investmentRepo,
         IRepository<Asset> assetRepo,
         IRepository<Income> incomeRepo,
+        IRepository<FixedIncomeInvestment> fixedIncomeInvestmentRepo,
+        IRepository<VariableIncomeInvestment> variableIncomeInvestmentRepo,
         IAssetHistoryRepository assetHistoryRepo)
     {
         _expenseRepo = expenseRepo;
@@ -25,6 +29,8 @@ public class FinanceService : IFinanceService
         _assetRepo = assetRepo;
         _incomeRepo = incomeRepo;
         _assetHistoryRepo = assetHistoryRepo;
+        _fixedIncomeInvestmentRepo = fixedIncomeInvestmentRepo;
+        _variableIncomeInvestmentRepo = variableIncomeInvestmentRepo;
     }
 
     public async Task DeleteExpenseAsync(Guid expenseId)
@@ -79,13 +85,31 @@ public class FinanceService : IFinanceService
 
     public async Task<IEnumerable<InvestmentDto>> GetInvestmentsAsync(Guid userId)
     {
-        var investments = await _investmentRepo.FindAsync(i => i.UserId == userId);
+        var investments = await _investmentRepo.FindAsync(i => i.UserId == userId,i => i.Variable,i => i.Fixed);
         return investments.Select(i => new InvestmentDto
         {
             Id = i.Id,
             Name = i.Name,
             Type = i.Type,
-            CreatedAt = i.CreatedAt
+            CreatedAt = i.CreatedAt,
+            Fixed = i.Fixed == null ? null : new FixedIncomeInvestmentDto
+            {
+                CurrentAmount = i.Fixed.CurrentAmount,
+                Id = i.Id,
+                InitialAmount = i.Fixed.InitialAmount,
+                InterestRate = i.Fixed.InterestRate,
+                InvestmentId = i.Fixed.InvestmentId,
+            },
+            Variable = i.Variable == null ? null : new VariableIncomeInvestmentDto
+            {
+                AveragePrice = i.Variable.AveragePrice,
+                Id = i.Id,
+                CurrentQuotePrice = i.Variable.CurrentQuotePrice,
+                InvestedAmount = i.Variable.InvestedAmount,
+                InvestmentId = i.Variable.InvestmentId,
+                MonthlyDividendYield = i.Variable.MonthlyDividendYield,
+                Quantity = i.Variable.Quantity,
+            },
         });
     }
 
@@ -101,18 +125,86 @@ public class FinanceService : IFinanceService
                 CreatedAt = dto.CreatedAt
             };
 
+            if(dto.Type == "Renda Fixa")
+            {
+                investment.Fixed = new FixedIncomeInvestment
+                {
+                    CurrentAmount = dto.Fixed!.CurrentAmount,
+                    InitialAmount = dto.Fixed!.InitialAmount,
+                    InterestRate = dto.Fixed!.InterestRate,
+                };
+            }
+            else
+            {
+                investment.Variable = new VariableIncomeInvestment
+                {
+                    CurrentQuotePrice = dto.Variable!.CurrentQuotePrice,
+                    AveragePrice = dto.Variable!.AveragePrice,
+                    InvestedAmount = dto.Variable!.InvestedAmount,
+                    MonthlyDividendYield = dto.Variable!.MonthlyDividendYield,
+                    Quantity = dto.Variable!.Quantity
+                };
+            }
+
             await _investmentRepo.AddAsync(investment);
 
             return new InvestmentDto { Id = investment.Id };
         }
         else
         {
-            var existingInvestment = await _investmentRepo.GetByIdAsync(dto.Id.Value);
+            var existingInvestments = await _investmentRepo.FindAsync(x => x.Id == dto.Id.Value,x=> x.Variable,x=>x.Fixed);
+            var existingInvestment = existingInvestments.FirstOrDefault();
 
             if (existingInvestment != null) 
             {
                 existingInvestment.Name = dto.Name;
                 existingInvestment.Type = dto.Type;
+
+                if(existingInvestment.Type == "Renda Fixa" && existingInvestment.Fixed == null)
+                {
+                    existingInvestment.Fixed = new FixedIncomeInvestment
+                    {
+                        CurrentAmount = dto.Fixed.CurrentAmount,
+                        InterestRate = dto.Fixed.InterestRate,
+                        InitialAmount = dto.Fixed.InitialAmount,
+                        InvestmentId = dto.Fixed.InvestmentId
+                    };
+
+                    await _fixedIncomeInvestmentRepo.AddAsync(existingInvestment.Fixed);
+                }
+
+                if (existingInvestment.Type != "Renda Fixa" && existingInvestment.Variable == null)
+                {
+                    existingInvestment.Variable = new VariableIncomeInvestment
+                    {
+                        AveragePrice = dto.Variable.AveragePrice,
+                        Quantity = dto.Variable.Quantity,
+                        InvestedAmount = dto.Variable.InvestedAmount,
+                        InvestmentId = dto.Variable.InvestmentId,
+                        CurrentQuotePrice = dto.Variable.CurrentQuotePrice,
+                        MonthlyDividendYield = dto.Variable.MonthlyDividendYield,
+                    };
+
+                    await _variableIncomeInvestmentRepo.AddAsync(existingInvestment.Variable);
+                }
+
+                if (existingInvestment.Fixed != null)
+                {
+                    existingInvestment.Fixed.InterestRate = dto.Fixed.InterestRate;
+                    existingInvestment.Fixed.CurrentAmount = dto.Fixed.CurrentAmount;
+                    existingInvestment.Fixed.InitialAmount = dto.Fixed.InitialAmount;
+                }
+
+                if(existingInvestment.Variable != null)
+                {
+                    existingInvestment.Variable.MonthlyDividendYield = dto.Variable.MonthlyDividendYield;
+                    existingInvestment.Variable.Quantity = dto.Variable.Quantity;
+                    existingInvestment.Variable.CurrentQuotePrice = dto.Variable.CurrentQuotePrice;
+                    existingInvestment.Variable.AveragePrice = dto.Variable.AveragePrice;
+                    existingInvestment.Variable.InvestedAmount = dto.Variable.InvestedAmount;
+                }
+
+                await _investmentRepo.UpdateAsync(existingInvestment);
             }
 
             return new InvestmentDto { Id = dto.Id };
@@ -219,7 +311,10 @@ public class FinanceService : IFinanceService
         
         var totalIncome = incomes.Sum(x => x.Amount);
         var totalExpenses = expenses.Sum(x => x.Amount);
-        var totalInvestments = investments.Sum(i => 0);
+        var totalInvestments = investments.Sum(i => 
+            (i.Variable == null ? 0 : (i.Variable.Quantity * i.Variable.CurrentQuotePrice)) +
+            (i.Fixed == null ? 0 : i.Fixed.CurrentAmount)
+        );
         var totalAssets = assets.Sum(a => a.EstimatedValue);
         var overallTotal = totalInvestments + totalAssets;
 

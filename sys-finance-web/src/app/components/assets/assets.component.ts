@@ -179,6 +179,7 @@ export class AssetsComponent implements OnInit {
   initCharts() {
     if (this.assets.length > 0) {
       this.assetChartOptions = {
+        tooltip : {},
         series: this.assets.map(a => a.estimatedValue),
         chart: { type: 'donut', height: 300, fontFamily: 'Plus Jakarta Sans, sans-serif' },
         dataLabels: { enabled: false },
