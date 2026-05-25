@@ -15,3 +15,7 @@
 /sys-finance-web/.vscode
 /sys-finance-web/src/environments/environment.prod.ts
 /sys-finance-web/node_modules
+
+.claude/
+.openclaude-profile.json
+.github/

@@ -52,7 +52,7 @@ export type DonutChartOptions = {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgApexchartsModule,RouterLink],
+  imports: [CommonModule, FormsModule, NgApexchartsModule, RouterLink],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
   assetTypeChartOptions?: DonutChartOptions;
   investmentTypeChartOptions?: DonutChartOptions;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
@@ -86,10 +86,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  getExpensesBarSize(){
-    var percentual = (this.patrimony.totalExpenses/this.patrimony.totalIncome) * 100;
-    if(percentual > 100) percentual = 100;
-    return "width:"+percentual.toString()+"%";
+  getExpensesBarSize() {
+    var percentual = (this.patrimony.totalExpenses / this.patrimony.totalIncome) * 100;
+    if (percentual > 100) percentual = 100;
+    return "width:" + percentual.toString() + "%";
   }
 
   initCharts() {
@@ -103,16 +103,6 @@ export class DashboardComponent implements OnInit {
 
       title: {
         text: ''
-      },
-
-      yaxis: {
-        labels: {
-          style: {
-            fontSize: '14px',
-            fontWeight: 500
-          },
-          show: true
-        }
       },
 
       responsive: [
@@ -129,7 +119,7 @@ export class DashboardComponent implements OnInit {
       ],
 
       chart: {
-        type: 'bar',
+        type: 'area',
         height: 280,
         toolbar: {
           show: false
@@ -138,25 +128,32 @@ export class DashboardComponent implements OnInit {
       },
 
       plotOptions: {
-        bar: {
-          horizontal: false,
-          borderRadius: 16,
-          barHeight: '10%',
-          distributed: false
-        }
       },
 
       dataLabels: {
-        enabled: false,
-        textAnchor: "middle",
+        enabled: true,
+        textAnchor: "end",
         offsetX: 0,
+        offsetY: -10,
         style: {
-          colors: ['#000000'],
           fontSize: '14px',
-          fontWeight: '800'
+          fontWeight: '500'
         },
         formatter: function (value: number) {
-          return `$${value.toFixed(2)}`;
+          return value.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          });
+        }
+      },
+
+      yaxis: {
+        labels: {
+          style: {
+            fontSize: '14px',
+            fontWeight: 500
+          },
+          show: false
         }
       },
 
@@ -178,8 +175,6 @@ export class DashboardComponent implements OnInit {
           show: true
         }
       },
-
-
 
       grid: {
         show: true
@@ -235,7 +230,7 @@ export class DashboardComponent implements OnInit {
     };
 
     this.investmentTypeChartOptions = {
-      series: this.patrimony.investments.map(ti => ti.currentValue),
+      series: this.patrimony.investments.map(ti => 0),
       chart: {
         type: 'donut',
         height: 300,

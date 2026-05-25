@@ -6,7 +6,6 @@ export interface ExpenseDto{
   id :string,
   description : string,
   amount : number,
-  date : Date,
   category : string,
   userId :string
 }
@@ -23,12 +22,27 @@ export interface IncomeDto{
 export interface InvestmentDto{
   id :string,
   name:string,
-  investedAmount:number,
-  currentValue:number,
-  date :Date,
+  createdAt :Date,
   type:string,
-  monthlyDividendYield:number,
-  monthlyDividendYeild?:number
+  variable : VariableIncomeInvestmentDto,
+  fixed : FixedIncomeInvestmentDto
+}
+
+export interface FixedIncomeInvestmentDto{
+  id :string,
+  investmentId :string,
+  initialAmount:number,
+  currentAmount:number,
+  interestRate:number
+}
+
+export interface VariableIncomeInvestmentDto{
+  id :string,
+  investmentId :string,
+  quantity:number,
+  averagePrice:number,
+  currentQuotePrice:number,
+  monthlyDividendYield:number
 }
 
 export interface AssetDto{

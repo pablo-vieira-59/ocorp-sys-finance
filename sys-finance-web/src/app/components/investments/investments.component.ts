@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { FinanceService, InvestmentDto } from '../../services/finance.service';
+import { FinanceService, FixedIncomeInvestmentDto, InvestmentDto, VariableIncomeInvestmentDto } from '../../services/finance.service';
 import { DonutChartOptions } from '../dashboard/dashboard.component';
 
 @Component({
@@ -19,7 +19,11 @@ export class InvestmentsComponent implements OnInit {
   showAddModal = false;
   isLoading = false;
   investmentToAdd = {} as InvestmentDto;
+  variableinvestimentToAdd = {} as VariableIncomeInvestmentDto;
+  fixedInvestimentToAdd = {} as FixedIncomeInvestmentDto;
   error = '';
+
+  investmentTypes = ["Renda Fixa", "Ações", "Fundos Imobiliários", "Criptomoedas"];
 
   constructor(
     private financeService: FinanceService,
@@ -55,11 +59,6 @@ export class InvestmentsComponent implements OnInit {
       currentValue: 0
     };
 
-    this.investments.forEach(x => {
-      this.dashboard.totalInvested += x.investedAmount;
-      this.dashboard.currentValue += x.currentValue;
-    });
-
     this.dashboard.profit = this.dashboard.currentValue - this.dashboard.totalInvested;
     if (this.dashboard.totalInvested > 0) {
       this.dashboard.profitPercentual = this.dashboard.profit / this.dashboard.totalInvested;
@@ -67,34 +66,20 @@ export class InvestmentsComponent implements OnInit {
   }
 
   openAddInvestment() {
-    this.investmentToAdd = {
-      name: '',
-      type: '',
-      investedAmount: 0,
-      currentValue: 0,
-      monthlyDividendYield: 0,
-      monthlyDividendYeild: 0,
-      date: new Date().toISOString().substring(0, 10) as any
-    } as InvestmentDto;
+    this.investmentToAdd = {} as InvestmentDto;
     this.showAddModal = true;
     this.error = '';
   }
 
   editInvestment(investment: InvestmentDto) {
-    this.investmentToAdd = { ...investment }; // copy object
-    this.investmentToAdd.monthlyDividendYield = this.investmentToAdd.monthlyDividendYield ?? this.investmentToAdd.monthlyDividendYeild ?? 0;
-    this.investmentToAdd.monthlyDividendYeild = this.investmentToAdd.monthlyDividendYield;
-    if (!this.investmentToAdd.date) {
-      this.investmentToAdd.date = new Date().toISOString().substring(0,10) as any;
-    } else {
-      this.investmentToAdd.date = new Date(this.investmentToAdd.date).toISOString().substring(0,10) as any;
-    }
+    this.investmentToAdd = investment;
     this.showAddModal = true;
     this.error = '';
   }
 
   deleteInvestment(investment: InvestmentDto) {
-    if(!confirm('Deseja excluir este investimento?')) return;
+    if (!confirm('Deseja excluir este investimento?')) return;
+
     this.isLoading = true;
     this.financeService.deleteInvestment(investment.id).subscribe({
       next: () => {
@@ -110,46 +95,20 @@ export class InvestmentsComponent implements OnInit {
 
   addInvestment() {
     this.isLoading = true;
-    
-    // Sync both fields to make sure we send the correct value to the backend
-    if (this.investmentToAdd.monthlyDividendYield != null) {
-      this.investmentToAdd.monthlyDividendYeild = this.investmentToAdd.monthlyDividendYield;
-    } else if (this.investmentToAdd.monthlyDividendYeild != null) {
-      this.investmentToAdd.monthlyDividendYield = this.investmentToAdd.monthlyDividendYeild;
-    } else {
-      this.investmentToAdd.monthlyDividendYield = 0;
-      this.investmentToAdd.monthlyDividendYeild = 0;
-    }
 
     if (this.validate()) {
-      if (this.investmentToAdd.id) {
-         this.financeService.updateInvestment(this.investmentToAdd.id, this.investmentToAdd).subscribe({
-           next: () => {
-             this.loadData();
-             this.investmentToAdd = {} as InvestmentDto;
-             this.isLoading = false;
-             this.showAddModal = false;
-           },
-           error: (err: any) => {
-             this.error = err.error?.message || 'Erro ao atualizar investimento.';
-             this.isLoading = false;
-           }
-         });
-      } else {
-        if (!this.investmentToAdd.date) this.investmentToAdd.date = new Date().toISOString().substring(0,10) as any;
-        this.financeService.addInvestment(this.investmentToAdd).subscribe({
-          next: () => {
-            this.loadData();
-            this.investmentToAdd = {} as InvestmentDto;
-            this.isLoading = false;
-            this.showAddModal = false;
-          },
-          error: (err: any) => {
-            this.error = err.error?.message || 'Erro ao adicionar investimento.';
-            this.isLoading = false;
-          }
-        });
-      }
+      this.financeService.addInvestment(this.investmentToAdd).subscribe({
+        next: () => {
+          this.loadData();
+          this.investmentToAdd = {} as InvestmentDto;
+          this.isLoading = false;
+          this.showAddModal = false;
+        },
+        error: (err: any) => {
+          this.error = err.error?.message || 'Erro ao adicionar investimento.';
+          this.isLoading = false;
+        }
+      });
     } else {
       this.isLoading = false;
     }
@@ -157,7 +116,7 @@ export class InvestmentsComponent implements OnInit {
 
   initCharts() {
     this.investmentChartOptions = {
-      series: this.investments.map(ti => ti.currentValue),
+      series: this.investments.map(ti => 0),
       chart: {
         type: 'donut',
         height: 300,
@@ -201,22 +160,40 @@ export class InvestmentsComponent implements OnInit {
       this.error = "É necessário selecionar uma categoria.";
       return false;
     }
-    if (this.investmentToAdd.investedAmount == null || this.investmentToAdd.investedAmount <= 0) {
-      this.error = "Valor investido deve ser maior que 0.";
-      return false;
+
+    if (this.investmentToAdd.type == this.investmentTypes[0]) {
+      if (this.fixedInvestimentToAdd.initialAmount <= 0 || this.fixedInvestimentToAdd.initialAmount == null) {
+        this.error = "Valor investido tem que ser maior que 0.";
+        return false;
+      }
+      if (this.fixedInvestimentToAdd.currentAmount < 0 || this.fixedInvestimentToAdd.currentAmount == null) {
+        this.error = "Valor atual tem que ser maior ou igual 0.";
+        return false;
+      }
+      if (this.fixedInvestimentToAdd.interestRate < 0 || this.fixedInvestimentToAdd.interestRate == null) {
+        this.error = "Taxa de juros tem que ser maior ou igual 0.";
+        return false;
+      }
     }
-    if (this.investmentToAdd.currentValue == null || this.investmentToAdd.currentValue <= 0) {
-      this.error = "Valor atual deve ser maior que 0.";
-      return false;
+    else {
+      if (this.variableinvestimentToAdd.quantity <= 0 || this.variableinvestimentToAdd.quantity == null) {
+        this.error = "Quantidade tem que ser maior que 0.";
+        return false;
+      }
+      if (this.variableinvestimentToAdd.averagePrice < 0 || this.variableinvestimentToAdd.averagePrice  == null) {
+        this.error = "Preço médio tem que ser maior ou igual a 0.";
+        return false;
+      }
+      if (this.variableinvestimentToAdd.currentQuotePrice < 0 || this.variableinvestimentToAdd.currentQuotePrice  == null) {
+        this.error = "Preço atual da cota tem que ser maior ou igual a 0.";
+        return false;
+      }
+      if (this.variableinvestimentToAdd.monthlyDividendYield < 0 || this.variableinvestimentToAdd.monthlyDividendYield  == null) {
+        this.error = "Percentual de dividendos tem que ser maior ou igual a 0.";
+        return false;
+      }
     }
-    
-    // Validate MonthlyDividendYeild/MonthlyDividendYield >= 0
-    const yieldVal = this.investmentToAdd.monthlyDividendYield ?? this.investmentToAdd.monthlyDividendYeild;
-    if (yieldVal == null || yieldVal < 0) {
-      this.error = "Rendimento de dividendos mensais não pode ser menor que 0.";
-      return false;
-    }
-    
+
     this.error = "";
     return true;
   }

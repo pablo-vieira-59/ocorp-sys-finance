@@ -35,14 +35,12 @@ public class FinanceController : ControllerBase
     [HttpPost("expenses")]
     public async Task<IActionResult> AddExpense(ExpenseDto dto) => Ok(await _financeService.AddExpenseAsync(GetUserId(), dto));
 
+
     [HttpGet("investments")]
     public async Task<IActionResult> GetInvestments() => Ok(await _financeService.GetInvestmentsAsync(GetUserId()));
 
     [HttpPost("investments")]
     public async Task<IActionResult> AddInvestment(InvestmentDto dto) => Ok(await _financeService.AddInvestmentAsync(GetUserId(), dto));
-
-    [HttpPut("investments/{id}")]
-    public async Task<IActionResult> UpdateInvestment(Guid id, InvestmentDto dto) => Ok(await _financeService.UpdateInvestmentAsync(GetUserId(), id, dto));
 
     [HttpDelete("investments/{id}")]
     public async Task<IActionResult> DeleteInvestment(Guid id)
@@ -50,6 +48,7 @@ public class FinanceController : ControllerBase
         await _financeService.DeleteInvestmentAsync(GetUserId(), id);
         return Ok();
     }
+
 
     [HttpGet("assets")]
     public async Task<IActionResult> GetAssets() => Ok(await _financeService.GetAssetsAsync(GetUserId()));
@@ -67,6 +66,7 @@ public class FinanceController : ControllerBase
         return Ok();
     }
 
+
     [HttpPost("asset-history")]
     public async Task<IActionResult> AddAssetHistory([FromBody] AssetHistoryDto dto)
     {
@@ -82,8 +82,10 @@ public class FinanceController : ControllerBase
         return Ok();
     }
 
+
     [HttpGet("patrimony")]
     public async Task<IActionResult> GetPatrimony() => Ok(await _financeService.GetPatrimonySummaryAsync(GetUserId()));
+
 
     [HttpGet("income")]
     public async Task<IActionResult> GetIncomes() {

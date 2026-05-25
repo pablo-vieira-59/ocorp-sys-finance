@@ -1,95 +1,89 @@
 <div class="row mt-0 mx-0 bg-white shadow top-bar">
-    <div class="col-lg-8 col-6 d-flex m-0">
-        <h2 class="my-auto">Investimentos</h2>
-    </div>
-    <div class="col-lg-4 col-6 text-end d-flex">
-        <button (click)="openAddInvestment()" class="w-100 btn btn-primary my-auto">+ Adicionar Investimento</button>
-    </div>
+  <div class="col-lg-8 col-6 d-flex m-0">
+    <h2 class="my-auto">Investimentos</h2>
+  </div>
+  <div class="col-lg-4 col-6 text-end d-flex">
+    <button (click)="openAddInvestment()" class="w-100 btn btn-primary my-auto">+ Adicionar Investimento</button>
+  </div>
 </div>
 
 <div class="p-4" style="margin-top: 100px;">
-    <div class="row">
-        <div class="col-lg-4 col-12 p-2 ">
-            <div class="border rounded-4 p-4 bg-white stretch">
-                <label class="col-12 fw-bold fs-7 f-muted">Total Investido</label>
-                <label class="col-12 fs-2 fw-bold text-primary">{{dashboard.totalInvested | currency:'BRL' }}</label>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-12 p-2">
-            <div class="border rounded-4 p-4 bg-white stretch">
-                <label class="col-12 fw-bold fs-7 f-muted">Valor Atual (Com Lucro)</label>
-                <label class="col-12 fs-2 fw-bold text-success">{{dashboard.currentValue | currency:'BRL' }}</label>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-12 p-2">
-            <div class="border rounded-4 p-4 bg-white stretch">
-                <label class="col-12 fw-bold fs-7 f-muted">Lucro/Prejuízo</label>
-                <label class="col-12 fs-2 fw-bold" [ngClass]="{'text-success': dashboard.profit >= 0, 'text-danger': dashboard.profit < 0}">{{dashboard.profit | currency:'BRL' }}</label>
-                <label class="col-12 fs-7">{{dashboard.profitPercentual | percent}} do valor investido</label>
-            </div>
-        </div>
+  <div class="row">
+    <div class="col-lg-4 col-12 p-2 ">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <label class="col-12 fw-bold fs-7 f-muted">Total Investido</label>
+        <label class="col-12 fs-2 fw-bold text-primary">{{dashboard.totalInvested | currency:'BRL' }}</label>
+      </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12 col-12 p-2">
-            <div class="border rounded-4 p-4 bg-white stretch">
-                <label class="col-12 fw-bold fs-7 f-muted">Distribuição da Carteira</label>
-                <div *ngIf="investments.length > 0">
-                    <apx-chart class="mx-auto" *ngIf="investmentChartOptions" [series]="investmentChartOptions.series"
-                        [chart]="investmentChartOptions.chart" [labels]="investmentChartOptions.labels"
-                        [responsive]="investmentChartOptions.responsive" [theme]="investmentChartOptions.theme">
-                    </apx-chart>
-                </div>
-                <div *ngIf="investments.length <= 0">
-                    <div class="mt-4 alert alert-info">
-                        Adicione um investimento para visualizar o gráfico da sua carteira.
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-4 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <label class="col-12 fw-bold fs-7 f-muted">Valor Atual (Com Lucro)</label>
+        <label class="col-12 fs-2 fw-bold text-success">{{dashboard.currentValue | currency:'BRL' }}</label>
+      </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12 col-12 p-2">
-            <div class="border rounded-4 p-4 bg-white">
-                <label class="col-12 fw-bold fs-7 f-muted">Meus Investimentos</label>
-                <div class="table-wrapper border mt-2" style="overflow-x: auto;">
-                    <table class="table table-striped custom-table">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Aplicado</th>
-                                <th>Valor Atual</th>
-                                <th>Taxa Mensal (%)</th>
-                                <th class="text-end">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let inv of investments">
-                                <td class="fw-semibold">{{inv.name}}</td>
-                                <td class="fw-semibold">{{inv.type}}</td>
-                                <td class="fw-semibold">{{inv.investedAmount | currency:'BRL'}}</td>
-                                <td class="fw-semibold text-success">{{inv.currentValue | currency:'BRL'}}</td>
-                                <td class="fw-semibold text-primary">{{inv.monthlyDividendYield | number:'1.1-2'}}%</td>
-                                <td class="text-end text-nowrap">
-                                    <button (click)="editInvestment(inv)"
-                                        class="btn btn-primary btn-sm">Editar</button>
-                                    <button (click)="deleteInvestment(inv)"
-                                        class="ms-2 btn btn-danger btn-sm">Excluir</button>
-                                </td>
-                            </tr>
-                            <tr *ngIf="investments.length === 0">
-                                <td colspan="6" class="text-center text-muted">Nenhum investimento encontrado.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-4 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <label class="col-12 fw-bold fs-7 f-muted">Lucro/Prejuízo</label>
+        <label class="col-12 fs-2 fw-bold"
+          [ngClass]="{'text-success': dashboard.profit >= 0, 'text-danger': dashboard.profit < 0}">{{dashboard.profit |
+          currency:'BRL' }}</label>
+        <label class="col-12 fs-7">{{dashboard.profitPercentual | percent}} do valor investido</label>
+      </div>
     </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <label class="col-12 fw-bold fs-7 f-muted">Distribuição da Carteira</label>
+        <div *ngIf="investments.length > 0">
+          <apx-chart class="mx-auto" *ngIf="investmentChartOptions" [series]="investmentChartOptions.series"
+            [chart]="investmentChartOptions.chart" [labels]="investmentChartOptions.labels"
+            [responsive]="investmentChartOptions.responsive" [theme]="investmentChartOptions.theme">
+          </apx-chart>
+        </div>
+        <div *ngIf="investments.length <= 0">
+          <div class="mt-4 alert alert-info">
+            Adicione um investimento para visualizar o gráfico da sua carteira.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-12 p-2">
+      <div class="border rounded-4 p-4 bg-white">
+        <label class="col-12 fw-bold fs-7 f-muted">Meus Investimentos</label>
+        <div class="table-wrapper border mt-2" style="overflow-x: auto;">
+          <table class="table table-striped custom-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th class="text-end">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let inv of investments">
+                <td class="fw-semibold">{{inv.name}}</td>
+                <td class="fw-semibold">{{inv.type}}</td>
+                <td class="text-end text-nowrap">
+                  <button (click)="editInvestment(inv)" class="btn btn-primary btn-sm">Editar</button>
+                  <button (click)="deleteInvestment(inv)" class="ms-2 btn btn-danger btn-sm">Excluir</button>
+                </td>
+              </tr>
+              <tr *ngIf="investments.length === 0">
+                <td colspan="6" class="text-center text-muted">Nenhum investimento encontrado.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="showAddModal" class="modal-overlay" id="modalOverlay">
@@ -120,43 +114,87 @@
       </div>
       <div class="col-12 d-flex">
         <select [(ngModel)]="investmentToAdd.type" class="form-select">
-          <option>Renda Fixa</option>
-          <option>Ações</option>
-          <option>Fundos Imobiliários</option>
-          <option>Criptomoedas</option>
-          <option>Outros</option>
+          <option *ngFor="let type of investmentTypes">{{type}}</option>
         </select>
       </div>
     </div>
 
-    <div class="row mt-4">
-      <div class="col-12 text-muted fw-bold fs-7 text-start">
-        <label>Valor Aplicado</label>
+    <div *ngIf="investmentToAdd.type == investmentTypes[0]">
+
+      <div class="row mt-4">
+        <div class="col-12 text-muted fw-bold fs-7 text-start">
+          <label>Valor Investido</label>
+        </div>
+        <div class="col-12 d-flex">
+          <input [(ngModel)]="fixedInvestimentToAdd.initialAmount" type="number" min="0" placeholder="Ex: 100.000,00"
+            class="form-control">
+        </div>
       </div>
-      <div class="col-12 d-flex">
-        <input [(ngModel)]="investmentToAdd.investedAmount" type="number"
-          class="form-control">
+
+      <div class="row mt-4">
+        <div class="col-12 text-muted fw-bold fs-7 text-start">
+          <label>Valor Atual</label>
+        </div>
+        <div class="col-12 d-flex">
+          <input [(ngModel)]="fixedInvestimentToAdd.currentAmount" type="number" min="0" placeholder="Ex: 100.000,00"
+            class="form-control">
+        </div>
       </div>
+
+      <div class="row mt-4">
+        <div class="col-12 text-muted fw-bold fs-7 text-start">
+          <label>Taxa de Juros % (Anual)</label>
+        </div>
+        <div class="col-12 d-flex">
+          <input [(ngModel)]="fixedInvestimentToAdd.interestRate" type="number" min="0" placeholder="Ex: 12%"
+            class="form-control">
+        </div>
+      </div>
+
     </div>
 
-    <div class="row mt-4">
-      <div class="col-12 text-muted fw-bold fs-7 text-start">
-        <label>Valor Atual</label>
-      </div>
-      <div class="col-12 d-flex">
-        <input [(ngModel)]="investmentToAdd.currentValue" type="number"
-          class="form-control">
-      </div>
-    </div>
+    <div *ngIf="investmentToAdd.type != investmentTypes[0] && investmentToAdd.type != null">
 
-    <div class="row mt-4">
-      <div class="col-12 text-muted fw-bold fs-7 text-start">
-        <label>Taxa de Dividendos Mensais (%)</label>
+      <div class="row mt-4">
+        <div class="col-12 text-muted fw-bold fs-7 text-start">
+          <label>Quantidade de cotas</label>
+        </div>
+        <div class="col-12 d-flex">
+          <input [(ngModel)]="variableinvestimentToAdd.quantity" type="number" min="0" placeholder="Ex: 1000"
+            class="form-control">
+        </div>
       </div>
-      <div class="col-12 d-flex">
-        <input [(ngModel)]="investmentToAdd.monthlyDividendYield" (ngModelChange)="investmentToAdd.monthlyDividendYeild = investmentToAdd.monthlyDividendYield" type="number" min="0" placeholder="Ex: 1.5"
-          class="form-control">
+
+      <div class="row mt-4">
+        <div class="col-12 text-muted fw-bold fs-7 text-start">
+          <label>Preço Médio</label>
+        </div>
+        <div class="col-12 d-flex">
+          <input [(ngModel)]="variableinvestimentToAdd.averagePrice" type="number" min="0" placeholder="Ex: 1000,00"
+            class="form-control">
+        </div>
       </div>
+
+      <div class="row mt-4">
+        <div class="col-12 text-muted fw-bold fs-7 text-start">
+          <label>Preço atual da cota</label>
+        </div>
+        <div class="col-12 d-flex">
+          <input [(ngModel)]="variableinvestimentToAdd.currentQuotePrice" type="number" min="0" placeholder="Ex: 1000,00"
+            class="form-control">
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-12 text-muted fw-bold fs-7 text-start">
+          <label>Percentual de divendendos mensal %</label>
+        </div>
+        <div class="col-12 d-flex">
+          <input [(ngModel)]="variableinvestimentToAdd.monthlyDividendYield" type="number" min="0" placeholder="Ex: 1%"
+            class="form-control">
+        </div>
+      </div>
+
     </div>
 
     <div class="row m-0 mt-4" *ngIf="error">

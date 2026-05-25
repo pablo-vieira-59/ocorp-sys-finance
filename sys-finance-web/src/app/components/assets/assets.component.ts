@@ -35,7 +35,7 @@ export class AssetsComponent implements OnInit {
   constructor(
     private financeService: FinanceService,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadData();
@@ -160,7 +160,7 @@ export class AssetsComponent implements OnInit {
     });
   }
 
-  editHistory(h :AssetHistoryDto){
+  editHistory(h: AssetHistoryDto) {
     this.historyToAdd = h;
     this.showAddHistoryModal = true;
     this.error = '';
@@ -195,15 +195,20 @@ export class AssetsComponent implements OnInit {
         series: [{ name: 'Patrimônio', data: this.assetHistories.map(x => x.amount) }],
         title: { text: '' },
         yaxis: {
-          labels: { style: { fontSize: '14px', fontWeight: 500 }, show: true }
+          labels: { style: { fontSize: '14px', fontWeight: 500 }, show: false }
         },
         responsive: [{ breakpoint: 768, options: { yaxis: { labels: { show: false } } } }],
-        chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'Plus Jakarta Sans, sans-serif' },
+        chart: { type: 'area', height: 280, toolbar: { show: false }, fontFamily: 'Plus Jakarta Sans, sans-serif' },
         plotOptions: { bar: { horizontal: false, borderRadius: 16, barHeight: '10%', distributed: false } },
         dataLabels: {
-          enabled: false, textAnchor: 'middle', offsetX: 0,
-          style: { colors: ['#000000'], fontSize: '14px', fontWeight: '800' },
-          formatter: function(value: number) { return `R$${value.toFixed(2)}`; }
+          enabled: true, textAnchor: 'end', offsetX: 0,offsetY: -10,
+          style: { fontSize: '14px', fontWeight: '800' },
+          formatter: function (value: number) {
+            return value.toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL'
+            });
+          }
         },
         xaxis: {
           categories: this.assetHistories.map(x =>

@@ -122,7 +122,6 @@ export class ExpensesComponent implements OnInit {
           description: expense.category,
           category: expense.category,
           amount: expense.amount,
-          date: expense.date,
           id: expense.id,
           userId: expense.userId
         });

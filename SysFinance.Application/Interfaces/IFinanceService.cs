@@ -11,7 +11,6 @@ public interface IFinanceService
     
     Task<IEnumerable<InvestmentDto>> GetInvestmentsAsync(Guid userId);
     Task<InvestmentDto> AddInvestmentAsync(Guid userId, InvestmentDto investmentDto);
-    Task<InvestmentDto> UpdateInvestmentAsync(Guid userId, Guid investmentId, InvestmentDto investmentDto);
     Task DeleteInvestmentAsync(Guid userId, Guid investmentId);
 
     Task<IEnumerable<AssetDto>> GetAssetsAsync(Guid userId);
