@@ -27,7 +27,8 @@ import { BarChartOptions, DonutChartOptions } from '../dashboard/dashboard.compo
   selector: 'app-expenses',
   standalone: true,
   imports: [CommonModule, FormsModule, NgApexchartsModule],
-  templateUrl: './expenses.component.html'
+  templateUrl: './expenses.component.html',
+  styleUrl: './expenses.component.css'
 })
 export class ExpensesComponent implements OnInit {
   topItemsChartOptions?: DonutChartOptions;
@@ -41,6 +42,16 @@ export class ExpensesComponent implements OnInit {
   mothlyExpense = { totalExpenses: 0, percentalOfIncome: 0 }
   highestCost = { amount: 0, category: '' }
   mostExpensiveCategory = { category: '', percentual: 0 }
+  categories = [
+    {name:'Alimentação',color:'#DC946F'},
+    {name:'Compras',color:'#78973B'},
+    {name:'Educação',color:'#35B2D4'},
+    {name:'Lazer',color:'#CD304A'},
+    {name:'Pessoal',color:'#F29407'},
+    {name:'Moradia',color:'#FFE600'},
+    {name:'Saúde',color:'#71CF5E'},
+    {name:'Transporte',color:'#D000FF'},
+  ]
 
   constructor(
     private financeService: FinanceService,
@@ -128,6 +139,11 @@ export class ExpensesComponent implements OnInit {
       }
     });
     this.categoriesExpenses.sort((a, b) => b.amount - a.amount)
+  }
+
+  getTagColor(category :string){
+    var color = this.categories.find(x => x.name == category)?.color;
+    return color;
   }
 
   initCharts() {

@@ -62,7 +62,6 @@
     </div>
   </div>
 
-  <!-- Table: Bens Cadastrados -->
   <div class="row">
     <!-- Donut: Distribuição de Bens -->
     <div class="col-lg-6 col-12 p-2">
@@ -84,43 +83,13 @@
 
     <div class="col-lg-6 col-12 p-2">
       <div class="border rounded-4 p-4 bg-white stretch">
-        <label class="col-12 fw-bold fs-7 f-muted">Meus Bens</label>
-        <div class="table-wrapper border mt-2" style="overflow-x: auto;">
-          <table class="table table-striped custom-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Tipo</th>
-                <th>Valor Estimado</th>
-                <th class="text-end">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let asset of assets">
-                <td class="fw-semibold">{{asset.name}}</td>
-                <td class="fw-semibold">{{asset.type}}</td>
-                <td class="fw-semibold text-success">{{asset.estimatedValue | currency:'BRL'}}</td>
-                <td class="text-end text-nowrap">
-                  <button (click)="editAsset(asset)" class="btn btn-primary btn-sm">Editar</button>
-                  <button (click)="deleteAsset(asset)" class="ms-2 btn btn-danger btn-sm">Excluir</button>
-                </td>
-              </tr>
-              <tr *ngIf="assets.length === 0">
-                <td colspan="4" class="text-center text-muted">Nenhum bem cadastrado.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="row">
+          <label class="col-6 fw-bold fs-7 f-muted">Histórico de Patrimônio</label>
+          <button (click)="openAddHistory()" class="col-6 btn btn-outline-primary btn-sm">+ Registrar
+            Histórico</button>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Table: Histórico de Patrimônio -->
-  <div class="row">
-    <div class="col-lg-8 col-12 p-2">
-      <div class="border rounded-4 p-4 bg-white">
-        <label class="col-12 fw-bold fs-7 f-muted">Histórico de Patrimônio</label>
-        <div class="table-wrapper border mt-2" style="overflow-x: auto;overflow-y: auto;max-height: 360px;">
+        <div class="table-wrapper border mt-2" style="overflow-x: auto;overflow-y: auto;max-height: 300px;">
           <table class="table table-striped custom-table">
             <thead>
               <tr>
@@ -146,16 +115,43 @@
         </div>
       </div>
     </div>
-
-    <div class="col-lg-4 col-12 p-2">
-      <div class="border rounded-4 p-4 bg-white">
-        <label class="col-12 fw-bold fs-7 f-muted">Ações</label>
-        <label class="col-12 fs-7 mt-2">Registre a evolução mensal do seu patrimônio</label>
-        <button (click)="openAddHistory()" class="btn btn-outline-primary btn-sm mt-2 w-100">+ Registrar
-          Histórico</button>
-      </div>
-    </div>
   </div>
+
+  <div class="row mt-4" *ngIf="assets.length > 0">
+        <h5>Meus bens</h5>
+        <div class="col-lg-4 col-12 p-2" *ngFor="let ass of assets">
+            <div class="border rounded-4 p-4 bg-white">
+                <div class="row">
+                    <div class="col-auto">
+                        <label class="fs-6 fw-bold">{{ass.name}}</label>
+                    </div>
+                    <div class="col text-end" (click)="deleteAsset(ass)">
+                        <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+                    </div>
+                </div>
+
+                <div class="col-12 fs-7 text-muted ">
+                    {{ass.type}}
+                </div>
+
+                <label class="col-12 fs-7 text-muted mt-2">Valor</label>
+
+                <div>
+                    <label class="col-12 fs-5 fw-bold">
+                        {{ass.estimatedValue| currency:'BRL'}}
+                    </label>
+                </div>
+                <div>
+                    <label class="fs-7 fw-bold text-primary">
+                        {{ass.estimatedValue / dashboard.overallTotal | percent}}
+                    </label>
+                    <label class="ms-1 fs-7 text-muted">do Total</label>
+                </div>
+
+                <button class="mt-4 col-12 btn btn-primary" (click)="editAsset(ass)">Editar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal: Adicionar/Editar Bem -->

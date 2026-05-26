@@ -25,8 +25,8 @@ export class InvestmentsComponent implements OnInit {
   error = '';
 
   investmentTypes = ["Renda Fixa", "Ações", "Fundos Imobiliários", "Criptomoedas"];
-  variableInvestments : InvestmentDto[] = [];
-  fixedInvestments :InvestmentDto[] = [];
+  variableInvestments: InvestmentDto[] = [];
+  fixedInvestments: InvestmentDto[] = [];
 
   constructor(
     private financeService: FinanceService,
@@ -46,10 +46,10 @@ export class InvestmentsComponent implements OnInit {
         this.fixedInvestments = [];
         this.variableInvestments = [];
         this.investments.forEach(i => {
-          if(i.type == this.investmentTypes[0]){
+          if (i.type == this.investmentTypes[0]) {
             this.fixedInvestments.push(i);
           }
-          else{
+          else {
             this.variableInvestments.push(i);
           }
         });
@@ -155,27 +155,28 @@ export class InvestmentsComponent implements OnInit {
     }
   }
 
+  public calculateTotalInvestment(ti :InvestmentDto) {
+    let total = 0;
+
+    if (ti.type == this.investmentTypes[0]) {
+      total += Number(ti.fixed.currentAmount);
+    }
+
+    else {
+      const variableTotal =
+        Number(ti.variable.currentQuotePrice) *
+        Number(ti.variable.quantity);
+
+      total += variableTotal;
+    }
+
+    return Math.round(total * 100) / 100;
+  }
+
   initCharts() {
     this.investmentChartOptions = {
-      series: this.investments.map(ti => {
-        let total = 0;
-
-        if (ti.type == this.investmentTypes[0]) {
-          total += Number(ti.fixed.currentAmount);
-        }
-
-        else {
-          const variableTotal =
-            Number(ti.variable.currentQuotePrice) *
-            Number(ti.variable.quantity);
-
-          total += variableTotal;
-        }
-
-        return Math.round(total * 100) / 100;
-      }),
+      series: this.investments.map(ti => this.calculateTotalInvestment(ti)),
       tooltip: {
-
       },
       chart: {
         type: 'donut',

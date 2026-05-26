@@ -11,7 +11,7 @@ namespace SysFinance.Domain.Entities
         public Guid? Id { get; set; } = Guid.NewGuid();
         public Guid? InvestmentId { get; set; }
         public decimal InvestedAmount { get; set; }
-        public decimal Quantity { get; set; }
+        public float Quantity { get; set; }
         public decimal AveragePrice { get; set; }
         public decimal CurrentQuotePrice { get; set; }
         public decimal MonthlyDividendYield { get; set; }

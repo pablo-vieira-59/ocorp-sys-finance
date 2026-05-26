@@ -53,90 +53,57 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-12 col-12 p-2">
-      <div class="border rounded-4 p-4 bg-white" style="overflow-x: auto;">
-        <label class="col-12 fw-bold fs-7 f-muted">Investimentos de Renda Fixa</label>
-        <div class="table-wrapper border mt-2">
-          <table class="table table-striped custom-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Valor Investido</th>
-                <th>Valor Atual</th>
-                <th class="text-nowrap">Rendimento %</th>
-                <th>Lucro</th>
-                <th class="text-end">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let inv of fixedInvestments">
-                <td class="fw-semibold">{{inv.name}}</td>
-                <td class="fw-semibold">{{inv.fixed.initialAmount | currency:'BRL'}}</td>
-                <td class="fw-semibold">{{inv.fixed.currentAmount | currency:'BRL'}}</td>
-                <td class="fw-semibold ">{{inv.fixed.interestRate/100| percent}}</td>
-                <td class="fw-semibold text-success">{{inv.fixed.currentAmount - inv.fixed.initialAmount|
-                  currency:'BRL'}}</td>
-                <td class="text-end text-nowrap">
-                  <button (click)="editInvestment(inv)" class="btn btn-primary btn-sm">Editar</button>
-                  <button (click)="deleteInvestment(inv)" class="ms-2 btn btn-danger btn-sm">Excluir</button>
-                </td>
-              </tr>
-              <tr *ngIf="fixedInvestments.length === 0">
-                <td colspan="6" class="text-center text-muted">Nenhum investimento encontrado.</td>
-              </tr>
-            </tbody>
-          </table>
+  <div class="row mt-4" *ngIf="investments.length > 0">
+    <h5>Meus Investimentos</h5>
+
+    <div class="col-lg-4 col-md-6 col-12 p-2" *ngFor="let inv of investments">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <div class="row">
+          <div class="col-auto">
+            <label class="fs-6 fw-bold">{{inv.name}}</label>
+          </div>
+          <div class="col text-end" (click)="deleteInvestment(inv)">
+            <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+          </div>
+        </div>
+
+        <label class="col-12 fs-7 text-muted">{{inv.type}}</label>
+
+        <label class="col-12 fs-7 text-muted mt-2">Valor atual</label>
+
+        <div *ngIf="inv.type == investmentTypes[0]">
+          <label class="col-12 fs-5 fw-bold">
+            {{inv.fixed.currentAmount | currency:'BRL'}}
+          </label>
+          <label
+            [className]="inv.fixed.currentAmount - inv.fixed.initialAmount  > 0 ? 'col-12 fs-7 fw-bold text-success' : 'col-12 fs-7 fw-bold text-danger'">
+            {{(inv.fixed.currentAmount - inv.fixed.initialAmount)/inv.fixed.initialAmount | percent}}
+            ({{inv.fixed.currentAmount - inv.fixed.initialAmount | currency:'BRL'}})
+          </label>
+        </div>
+
+        <div *ngIf="inv.type != investmentTypes[0]">
+          <label class="col-12 fs-5 fw-bold">
+            {{inv.variable.quantity * inv.variable.currentQuotePrice | currency:'BRL'}}
+          </label>
+          <label
+            [className]="((inv.variable.quantity * inv.variable.currentQuotePrice) - inv.variable.investedAmount)  > 0 ? 'col-12 fs-7 fw-bold text-success' : 'col-12 fs-7 fw-bold text-danger'">
+            {{((inv.variable.quantity * inv.variable.currentQuotePrice) -
+            inv.variable.investedAmount)/inv.variable.investedAmount | percent}}
+            ({{((inv.variable.quantity * inv.variable.currentQuotePrice) - inv.variable.investedAmount) |
+            currency:'BRL'}})
+          </label>
+        </div>
+
+        <div class="row mx-0 mt-4">
+          <button class="col-6 me-1 btn btn-outline-primary ">Detalhes</button>
+          <button class="col btn btn-primary" (click)="editInvestment(inv)">Editar</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-12 col-12 p-2">
-      <div class="border rounded-4 p-4 bg-white">
-        <label class="col-12 fw-bold fs-7 f-muted">Investimentos de Renda Variavel</label>
-        <div class="table-wrapper border mt-2">
-          <table class="table table-striped custom-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th class="text-nowrap">Valor Investido</th>
-                <th class="text-nowrap">Quantidade</th>
-                <th class="text-nowrap">Preço da cota</th>
-                <th class="text-nowrap">Valor Atual</th>
-                <th class="text-nowrap">Preço Médio</th>
-                <th class="text-nowrap">Rendimento %</th>
-                <th class="text-nowrap">Lucro</th>
-                <th class="text-end">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let inv of variableInvestments">
-                <td class="fw-semibold">{{inv.name}}</td>
-                <td class="fw-semibold">{{inv.variable.investedAmount| currency:'BRL'}}</td>
-                <td class="fw-semibold">{{inv.variable.quantity}}</td>
-                <td class="fw-semibold">{{inv.variable.currentQuotePrice | currency:'BRL'}}</td>
-                <td class="fw-semibold">{{inv.variable.currentQuotePrice * inv.variable.quantity | currency:'BRL'}}</td>
-                <td class="fw-semibold">{{inv.variable.averagePrice | currency:'BRL'}}</td>
-                <td class="fw-semibold ">{{inv.variable.monthlyDividendYield / 100| percent}}</td>
-                <td class="fw-semibold text-success">{{(inv.variable.currentQuotePrice * inv.variable.quantity) -
-                  inv.variable.investedAmount|
-                  currency:'BRL'}}</td>
-                <td class="text-end text-nowrap">
-                  <button (click)="editInvestment(inv)" class="btn btn-primary btn-sm">Editar</button>
-                  <button (click)="deleteInvestment(inv)" class="ms-2 btn btn-danger btn-sm">Excluir</button>
-                </td>
-              </tr>
-              <tr *ngIf="variableInvestments.length === 0">
-                <td colspan="6" class="text-center text-muted">Nenhum investimento encontrado.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+
 </div>
 
 <div *ngIf="showAddModal" class="modal-overlay" id="modalOverlay">

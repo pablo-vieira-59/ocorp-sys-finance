@@ -34,7 +34,7 @@ public class VariableIncomeInvestmentDto
     public Guid? Id { get; set; }
     public Guid? InvestmentId { get; set; }
     public decimal InvestedAmount { get; set; }
-    public decimal Quantity { get; set; }
+    public float Quantity { get; set; }
     public decimal AveragePrice { get; set; }
     public decimal CurrentQuotePrice { get; set; }
     public decimal MonthlyDividendYield { get; set; }

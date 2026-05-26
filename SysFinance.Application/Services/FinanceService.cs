@@ -312,8 +312,7 @@ public class FinanceService : IFinanceService
         var totalIncome = incomes.Sum(x => x.Amount);
         var totalExpenses = expenses.Sum(x => x.Amount);
         var totalInvestments = investments.Sum(i => 
-            (i.Variable == null ? 0 : (i.Variable.Quantity * i.Variable.CurrentQuotePrice)) +
-            (i.Fixed == null ? 0 : i.Fixed.CurrentAmount)
+            (i.Type == "Renda Fixa" ? i.Fixed.CurrentAmount : ((decimal)i.Variable.Quantity * i.Variable.CurrentQuotePrice))
         );
         var totalAssets = assets.Sum(a => a.EstimatedValue);
         var overallTotal = totalInvestments + totalAssets;

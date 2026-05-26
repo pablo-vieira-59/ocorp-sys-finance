@@ -22,6 +22,7 @@ import {
 } from 'ng-apexcharts';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { InvestmentsComponent } from '../investments/investments.component';
 
 export type BarChartOptions = {
   series: ApexAxisChartSeries;
@@ -195,7 +196,7 @@ export class DashboardComponent implements OnInit {
     };
 
     this.assetTypeChartOptions = {
-      tooltip : {},
+      tooltip: {},
       series: this.patrimony.assets.map(ti => ti.estimatedValue),
       chart: {
         type: 'donut',
@@ -232,8 +233,24 @@ export class DashboardComponent implements OnInit {
     };
 
     this.investmentTypeChartOptions = {
-      tooltip : {},
-      series: this.patrimony.investments.map(ti => 0),
+      tooltip: {},
+      series: this.patrimony.investments.map(ti => {
+        let total = 0;
+
+        if (ti.type == 'Renda Fixa') {
+          total += Number(ti.fixed.currentAmount);
+        }
+
+        else {
+          const variableTotal =
+            Number(ti.variable.currentQuotePrice) *
+            Number(ti.variable.quantity);
+
+          total += variableTotal;
+        }
+
+        return Math.round(total * 100) / 100;
+      }),
       chart: {
         type: 'donut',
         height: 300,

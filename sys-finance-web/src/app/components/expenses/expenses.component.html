@@ -10,14 +10,14 @@
 <div class="p-4" style="margin-top: 100px;">
   <div class="row">
     <div class="col-lg-4 col-12 p-2">
-      <div class="border rounded-4 p-4 bg-white">
+      <div class="border rounded-4 p-4 bg-white stretch">
         <label class="col-12 fw-bold fs-7 f-muted">Depesas mensais</label>
         <label class="col-12 fs-2 fw-bold text-danger">{{mothlyExpense.totalExpenses | currency:'BRL' }}</label>
         <label class="col-12 fs-7">{{mothlyExpense.percentalOfIncome | percent}} da renda total</label>
       </div>
     </div>
 
-    <div class="col-lg-4 col-12 p-2">
+    <div class="col-lg-4 col-12 p-2 stretch">
       <div class="border rounded-4 p-4 bg-white">
         <label class="col-12 fw-bold fs-7 f-muted">Maior custo</label>
         <label class="col-12 fs-2 fw-bold text-warning">{{highestCost.amount | currency:'BRL'}}</label>
@@ -26,7 +26,7 @@
     </div>
 
     <div class="col-lg-4 col-12 p-2">
-      <div class="border rounded-4 p-4 bg-white">
+      <div class="border rounded-4 p-4 bg-white stretch">
         <label class="col-12 fw-bold fs-7 f-muted">Categoria mais cara</label>
         <label class="col-12 fs-2 fw-bold text-primary">{{mostExpensiveCategory.category}}</label>
         <label class="col-12 fs-7">{{mostExpensiveCategory.percentual | percent}} do total</label>
@@ -75,36 +75,38 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-12 col-12 p-2">
+  <div class="row mt-4" *ngIf="expenses.length > 0">
+    <h5>Despesas</h5>
+    <div class="col-lg-4 col-12 p-2" *ngFor="let exp of expenses">
       <div class="border rounded-4 p-4 bg-white">
-        <label class="col-12 fw-bold fs-7 f-muted">Depesas</label>
-        <div class="table-wrapper border mt-2" style="overflow-x: auto;">
-          <table class="table table-striped custom-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Categoria</th>
-                <th>Valor</th>
-                <th class="text-end">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let expense of expenses">
-                <td class="fw-semibold">{{expense.description}}</td>
-                <td class="fw-semibold">{{expense.category}}</td>
-                <td class="fw-semibold text-success">{{expense.amount | currency:'BRL'}}</td>
-                <td class="text-end text-nowrap">
-                  <button (click)="editExpense(expense)" class="btn btn-primary btn-sm">Editar</button>
-                  <button (click)="deleteExpense(expense)" class="ms-2 btn btn-danger btn-sm">Excluir</button>
-                </td>
-              </tr>
-              <tr *ngIf="expenses.length === 0">
-                <td colspan="5" class="text-center text-muted">Nenhuma despesa encontrada.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="row">
+          <div class="col-auto">
+            <label class="fs-6 fw-bold">{{exp.description}}</label>
+          </div>
+          <div class="col text-end" (click)="deleteExpense(exp)">
+            <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+          </div>
         </div>
+
+        <div class="col-12 fs-7 text-muted ">
+          {{exp.category}}
+        </div>
+
+        <label class="col-12 fs-7 text-muted mt-2">Valor</label>
+
+        <div>
+          <label class="col-12 fs-5 fw-bold">
+            {{exp.amount| currency:'BRL'}}
+          </label>
+        </div>
+        <div>
+          <label class="fs-7 fw-bold text-primary">
+            {{exp.amount / mothlyExpense.totalExpenses| percent}}
+          </label>
+          <label class="ms-1 fs-7 text-muted">do Total</label>
+        </div>
+
+        <button class="mt-4 col-12 btn btn-primary" (click)="editExpense(exp)">Editar</button>
       </div>
     </div>
   </div>
@@ -140,14 +142,7 @@
       </div>
       <div class="col-12 d-flex">
         <select [(ngModel)]="expenseToAdd.category" class="form-select">
-          <option>Alimentação</option>
-          <option>Compras</option>
-          <option>Educação</option>
-          <option>Lazer</option>
-          <option>Pessoal</option>
-          <option>Moradia</option>
-          <option>Saúde</option>
-          <option>Transporte</option>
+          <option *ngFor="let cat of categories">{{cat.name}}</option>
         </select>
       </div>
     </div>

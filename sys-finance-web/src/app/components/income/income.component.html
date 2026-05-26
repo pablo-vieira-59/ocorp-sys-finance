@@ -13,7 +13,8 @@
             <div class="border rounded-4 p-4 bg-white stretch">
                 <label class="col-12 fw-bold fs-7 f-muted">Renda mensal</label>
                 <label class="col-12 fs-2 fw-bold text-success">{{dashboard.totalValue| currency:'BRL' }}</label>
-                <label class="col-12 fs-7">Valor Liquido : <b class="fw-bold">{{dashboard.liquidValue | currency:'BRL' }}</b></label>
+                <label class="col-12 fs-7">Valor Liquido : <b class="fw-bold">{{dashboard.liquidValue | currency:'BRL'
+                        }}</b></label>
             </div>
         </div>
 
@@ -28,8 +29,10 @@
         <div class="col-lg-4 col-12 p-2">
             <div class="border rounded-4 p-4 bg-white stretch">
                 <label class="col-12 fw-bold fs-7 f-muted">Saldo após despesas</label>
-                <label class="col-12 fs-2 fw-bold text-warning">{{dashboard.totalAfterDiscounts | currency:'BRL' }}</label>
-                <label class="col-12 fs-7">{{dashboard.percentualAfterDiscounts | percent}} da renda liquida total</label>
+                <label class="col-12 fs-2 fw-bold text-warning">{{dashboard.totalAfterDiscounts | currency:'BRL'
+                    }}</label>
+                <label class="col-12 fs-7">{{dashboard.percentualAfterDiscounts | percent}} da renda liquida
+                    total</label>
             </div>
         </div>
     </div>
@@ -88,97 +91,97 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12 col-12 p-2">
+    <div class="row mt-4" *ngIf="incomes.length > 0">
+        <h5>Fontes de Renda</h5>
+        <div class="col-lg-4 col-12 p-2" *ngFor="let inc of incomes">
             <div class="border rounded-4 p-4 bg-white">
-                <label class="col-12 fw-bold fs-7 f-muted">Fontes de Renda</label>
-                <div class="table-wrapper border mt-2" style="overflow-x: auto;">
-                    <table class="table table-striped custom-table">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Valor</th>
-                                <th class="text-end">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let income of incomes">
-                                <td class="fw-semibold">{{income.description}}</td>
-                                <td class="fw-semibold">{{income.type}}</td>
-                                <td class="fw-semibold text-success">{{income.amount | currency:'BRL'}}</td>
-                                <td class="text-end text-nowrap">
-                                    <button (click)="editIncome(income)"
-                                        class="btn btn-primary btn-sm">Editar</button>
-                                    <button (click)="deleteIncome(income)"
-                                        class="ms-2 btn btn-danger btn-sm">Excluir</button>
-                                </td>
-                            </tr>
-                            <tr *ngIf="incomes.length === 0">
-                                <td colspan="5" class="text-center text-muted">Nenhuma fonte de renda encontrada.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-auto">
+                        <label class="fs-6 fw-bold">{{inc.description}}</label>
+                    </div>
+                    <div class="col text-end" (click)="deleteIncome(inc)">
+                        <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+                    </div>
                 </div>
+
+                <div class="col-12 fs-7 text-muted ">
+                    {{inc.type}}
+                </div>
+
+                <label class="col-12 fs-7 text-muted mt-2">Valor</label>
+
+                <div>
+                    <label class="col-12 fs-5 fw-bold">
+                        {{inc.amount| currency:'BRL'}}
+                    </label>
+                </div>
+                <div>
+                    <label class="fs-7 fw-bold text-primary">
+                        {{inc.amount / dashboard.totalValue| percent}}
+                    </label>
+                    <label class="ms-1 fs-7 text-muted">do Total</label>
+                </div>
+
+                <button class="mt-4 col-12 btn btn-primary" (click)="editIncome(inc)">Editar</button>
             </div>
         </div>
     </div>
 </div>
 
 <div *ngIf="showAddModal" class="modal-overlay" id="modalOverlay">
-  <div class="modal p-4">
+    <div class="modal p-4">
 
-    <span class="modal-close" (click)="showAddModal = false">&times;</span>
+        <span class="modal-close" (click)="showAddModal = false">&times;</span>
 
-    <div class="col-12 fw-bold fs-4">
-      Nova fonte de renda
-    </div>
-    <div class="col-12 fs-7 text-muted text-nowrap">
-      Adicione um nova fonte de renda mensal
-    </div>
+        <div class="col-12 fw-bold fs-4">
+            Nova fonte de renda
+        </div>
+        <div class="col-12 fs-7 text-muted text-nowrap">
+            Adicione um nova fonte de renda mensal
+        </div>
 
-    <div class="row">
-      <div class="col-12 text-muted fw-bold fs-7 text-start">
-        <label>Descrição</label>
-      </div>
-      <div class="col-12 d-flex">
-        <input [(ngModel)]="incomeToAdd.description" type="text" placeholder="Digite uma descrição ..."
-          class="form-control">
-      </div>
-    </div>
+        <div class="row">
+            <div class="col-12 text-muted fw-bold fs-7 text-start">
+                <label>Descrição</label>
+            </div>
+            <div class="col-12 d-flex">
+                <input [(ngModel)]="incomeToAdd.description" type="text" placeholder="Digite uma descrição ..."
+                    class="form-control">
+            </div>
+        </div>
 
-    <div class="row mt-4">
-      <div class="col-12 text-muted fw-bold fs-7 text-start">
-        <label>Categoria</label>
-      </div>
-      <div class="col-12 d-flex">
-        <select [(ngModel)]="incomeToAdd.type" class="form-select">
-          <option>Salário CLT</option>
-          <option>Salário PJ</option>
-          <option>Lucro de Empresa</option>
-          <option>Freelance</option>
-        </select>
-      </div>
-    </div>
+        <div class="row mt-4">
+            <div class="col-12 text-muted fw-bold fs-7 text-start">
+                <label>Categoria</label>
+            </div>
+            <div class="col-12 d-flex">
+                <select [(ngModel)]="incomeToAdd.type" class="form-select">
+                    <option>Salário CLT</option>
+                    <option>Salário PJ</option>
+                    <option>Lucro de Empresa</option>
+                    <option>Freelance</option>
+                </select>
+            </div>
+        </div>
 
-    <div class="row mt-4">
-      <div class="col-12 text-muted fw-bold fs-7 text-start">
-        <label>Valor</label>
-      </div>
-      <div class="col-12 d-flex">
-        <input [(ngModel)]="incomeToAdd.amount" type="number" placeholder="Digite uma descrição ..."
-          class="form-control">
-      </div>
-    </div>
+        <div class="row mt-4">
+            <div class="col-12 text-muted fw-bold fs-7 text-start">
+                <label>Valor</label>
+            </div>
+            <div class="col-12 d-flex">
+                <input [(ngModel)]="incomeToAdd.amount" type="number" placeholder="Digite uma descrição ..."
+                    class="form-control">
+            </div>
+        </div>
 
-    <div class="row m-0 mt-4" *ngIf="error">
-      <span class="col-12 alert alert-danger text-start">
-        {{error}}
-      </span>
-    </div>
+        <div class="row m-0 mt-4" *ngIf="error">
+            <span class="col-12 alert alert-danger text-start">
+                {{error}}
+            </span>
+        </div>
 
-    <div class="col-12 mt-4">
-      <button (click)="addIncome()" class="w-100 btn btn-primary">Salvar</button>
+        <div class="col-12 mt-4">
+            <button (click)="addIncome()" class="w-100 btn btn-primary">Salvar</button>
+        </div>
     </div>
-  </div>
 </div>
