@@ -133,6 +133,20 @@ public class FinanceService : IFinanceService
                     InitialAmount = dto.Fixed!.InitialAmount,
                     InterestRate = dto.Fixed!.InterestRate,
                 };
+
+                if (investment.Fixed.InterestRate > 0)
+                {
+                    var income = new Income
+                    {
+                        Amount = dto.Fixed!.CurrentAmount * ((dto.Fixed!.InterestRate / 100) / 12),
+                        Description = dto.Name,
+                        Discounts = 0,
+                        UserId = userId,
+                        Type = "Investimento"
+                    };
+
+                    await _incomeRepo.AddAsync(income);
+                }
             }
             else
             {
@@ -144,6 +158,20 @@ public class FinanceService : IFinanceService
                     MonthlyDividendYield = dto.Variable!.MonthlyDividendYield,
                     Quantity = dto.Variable!.Quantity
                 };
+
+                if (investment.Variable.MonthlyDividendYield > 0)
+                {
+                    var income = new Income
+                    {
+                        Amount = (dto.Variable!.CurrentQuotePrice * (decimal)dto.Variable!.Quantity) * (dto.Variable!.MonthlyDividendYield / 100),
+                        Description = dto.Name,
+                        Discounts = 0,
+                        UserId = userId,
+                        Type = "Investimento"
+                    };
+
+                    await _incomeRepo.AddAsync(income);
+                }
             }
 
             await _investmentRepo.AddAsync(investment);
@@ -205,6 +233,32 @@ public class FinanceService : IFinanceService
                 }
 
                 await _investmentRepo.UpdateAsync(existingInvestment);
+
+                var income = (await _incomeRepo.FindAsync(x => x.UserId == existingInvestment.UserId 
+                && x.Description == existingInvestment.Name 
+                && x.Type == "Investimento")).FirstOrDefault();
+
+                if (income != null) 
+                { 
+                    if(existingInvestment.Type == "Renda Fixa")
+                    {
+                        income.Amount = dto.Fixed!.CurrentAmount * ((dto.Fixed!.InterestRate / 100) / 12);
+                        await _incomeRepo.UpdateAsync(income);
+                    }
+                    else
+                    {
+                        income.Amount = (dto.Variable!.CurrentQuotePrice * (decimal)dto.Variable!.Quantity) * (dto.Variable!.MonthlyDividendYield / 100);
+                        if(dto.Variable!.MonthlyDividendYield <= 0)
+                        {
+                            await _incomeRepo.DeleteAsync(income);
+                        }
+                        else
+                        {
+                            await _incomeRepo.UpdateAsync(income);
+                        }
+                    }
+
+                }
             }
 
             return new InvestmentDto { Id = dto.Id };
@@ -220,7 +274,7 @@ public class FinanceService : IFinanceService
         var name = investment.Name;
         await _investmentRepo.DeleteAsync(investment);
 
-        var existingIncome = (await _incomeRepo.FindAsync(i => i.UserId == userId && i.Description == name)).FirstOrDefault();
+        var existingIncome = (await _incomeRepo.FindAsync(i => i.UserId == userId && i.Description == name && i.Type == "Investimento")).FirstOrDefault();
         if (existingIncome != null)
         {
             await _incomeRepo.DeleteAsync(existingIncome);
@@ -351,6 +405,17 @@ public class FinanceService : IFinanceService
         {
             var userId = existingIncome.UserId;
             var description = existingIncome.Description;
+
+            if (existingIncome!.Type == "Investimento")
+            {
+                var investment = (await _investmentRepo.FindAsync(x => x.UserId == userId
+                && x.Name == existingIncome.Description)).FirstOrDefault();
+
+                if (investment != null)
+                {
+                    await _investmentRepo.DeleteAsync(investment);
+                }
+            }
 
             await _incomeRepo.DeleteAsync(existingIncome);
         }

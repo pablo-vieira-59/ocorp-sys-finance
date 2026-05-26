@@ -94,7 +94,7 @@
     <div class="row mt-4" *ngIf="incomes.length > 0">
         <h5>Fontes de Renda</h5>
         <div class="col-lg-4 col-12 p-2" *ngFor="let inc of incomes">
-            <div class="border rounded-4 p-4 bg-white">
+            <div class="border rounded-4 p-4 bg-white stretch">
                 <div class="row">
                     <div class="col-auto">
                         <label class="fs-6 fw-bold">{{inc.description}}</label>
@@ -122,7 +122,7 @@
                     <label class="ms-1 fs-7 text-muted">do Total</label>
                 </div>
 
-                <button class="mt-4 col-12 btn btn-primary" (click)="editIncome(inc)">Editar</button>
+                <button *ngIf="inc.type != 'Investimento'" class="mt-4 col-12 btn btn-primary" (click)="editIncome(inc)">Editar</button>
             </div>
         </div>
     </div>

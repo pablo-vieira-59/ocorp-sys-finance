@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  NgApexchartsModule} from 'ng-apexcharts';
+  NgApexchartsModule
+} from 'ng-apexcharts';
 import { FinanceService, IncomeDto } from '../../services/finance.service';
 import { DonutChartOptions } from '../dashboard/dashboard.component';
 
@@ -101,6 +102,8 @@ export class IncomeComponent implements OnInit {
   }
 
   deleteIncome(income: IncomeDto) {
+    if (!confirm('Deseja excluir esta renda?')) return;
+
     this.isLoading = true;
     this.financeService.deleteIncome(income.id).subscribe({
       next: (e) => {
@@ -135,7 +138,7 @@ export class IncomeComponent implements OnInit {
 
   initCharts() {
     this.incomeChartOptions = {
-      tooltip : {},
+      tooltip: {},
       series: this.incomes.map(ti => ti.amount),
       chart: {
         type: 'donut',

@@ -43,15 +43,18 @@ export class ExpensesComponent implements OnInit {
   highestCost = { amount: 0, category: '' }
   mostExpensiveCategory = { category: '', percentual: 0 }
   categories = [
-    {name:'Alimentação',color:'#DC946F'},
-    {name:'Compras',color:'#78973B'},
-    {name:'Educação',color:'#35B2D4'},
-    {name:'Lazer',color:'#CD304A'},
-    {name:'Pessoal',color:'#F29407'},
-    {name:'Moradia',color:'#FFE600'},
-    {name:'Saúde',color:'#71CF5E'},
-    {name:'Transporte',color:'#D000FF'},
-  ]
+    { name: 'Alimentação', color: '#DC946F' },
+    { name: 'Compras', color: '#78973B' },
+    { name: 'Educação', color: '#35B2D4' },
+    { name: 'Lazer', color: '#CD304A' },
+    { name: 'Pessoal', color: '#F29407' },
+    { name: 'Moradia', color: '#FFE600' },
+    { name: 'Saúde', color: '#71CF5E' },
+    { name: 'Transporte', color: '#D000FF' },
+  ];
+
+  searchExpense = '';
+  visibleExpenses: ExpenseDto[] = [];
 
   constructor(
     private financeService: FinanceService,
@@ -68,6 +71,7 @@ export class ExpensesComponent implements OnInit {
     this.financeService.getExpenses().subscribe({
       next: (e) => {
         this.expenses = e;
+        this.visibleExpenses = this.expenses;
         this.mapExpensesCategories();
         this.initCharts();
         this.calcDashboard();
@@ -80,11 +84,20 @@ export class ExpensesComponent implements OnInit {
     });
   }
 
+  filterExpenses() {
+    if (this.searchExpense != '' || this.searchExpense != null) {
+      this.visibleExpenses = this.expenses.filter(x => x.description.toUpperCase().includes(this.searchExpense.toUpperCase()))
+    }
+    else{
+      this.visibleExpenses = this.expenses;
+    }
+  }
+
   calcDashboard() {
     this.mothlyExpense = { totalExpenses: 0, percentalOfIncome: 0 }
     this.highestCost = { amount: 0, category: '' }
     this.mostExpensiveCategory = { category: '', percentual: 0 }
-    
+
     this.expenses.forEach(x => {
       this.mothlyExpense.totalExpenses += x.amount;
       if (x.amount > this.highestCost.amount) {
@@ -141,14 +154,14 @@ export class ExpensesComponent implements OnInit {
     this.categoriesExpenses.sort((a, b) => b.amount - a.amount)
   }
 
-  getTagColor(category :string){
+  getTagColor(category: string) {
     var color = this.categories.find(x => x.name == category)?.color;
     return color;
   }
 
   initCharts() {
     this.topItemsChartOptions = {
-      tooltip : {},
+      tooltip: {},
       series: this.expenses.map(ti => ti.amount),
       chart: {
         type: 'donut',
@@ -282,6 +295,8 @@ export class ExpensesComponent implements OnInit {
   }
 
   deleteExpense(expense: ExpenseDto) {
+    if (!confirm('Deseja excluir esta despesa?')) return;
+
     this.isLoading = true;
     this.financeService.deleteExpense(expense.id).subscribe({
       next: (e) => {

@@ -76,9 +76,17 @@
   </div>
 
   <div class="row mt-4" *ngIf="expenses.length > 0">
-    <h5>Despesas</h5>
-    <div class="col-lg-4 col-12 p-2" *ngFor="let exp of expenses">
-      <div class="border rounded-4 p-4 bg-white">
+    <div class="col-12">
+      <div class="row">
+        <h5 class="col-lg-6 col-12">Despesas</h5>
+        <div class="col-lg-6 col-12">
+          <input type="text" (keyup)="filterExpenses()" [(ngModel)]="searchExpense" class="form-control" placeholder="Pesquisar...">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-12 p-2" *ngFor="let exp of visibleExpenses">
+      <div class="border rounded-4 p-4 bg-white stretch">
         <div class="row">
           <div class="col-auto">
             <label class="fs-6 fw-bold">{{exp.description}}</label>
