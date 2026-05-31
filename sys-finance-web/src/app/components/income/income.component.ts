@@ -24,6 +24,7 @@ export class IncomeComponent implements OnInit {
   isLoading = false;
   incomeToAdd = {} as IncomeDto;
   error = '';
+  incomeTypes = ["Salário CLT","Salário PJ","Lucro de Empresa","Freelance","Outros"]
 
   constructor(
     private financeService: FinanceService,

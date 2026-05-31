@@ -156,10 +156,7 @@
             </div>
             <div class="col-12 d-flex">
                 <select [(ngModel)]="incomeToAdd.type" class="form-select">
-                    <option>Salário CLT</option>
-                    <option>Salário PJ</option>
-                    <option>Lucro de Empresa</option>
-                    <option>Freelance</option>
+                    <option *ngFor="let inc of incomeTypes">{{inc}}</option>
                 </select>
             </div>
         </div>

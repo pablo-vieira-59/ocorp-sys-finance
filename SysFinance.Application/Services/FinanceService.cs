@@ -259,6 +259,33 @@ public class FinanceService : IFinanceService
                     }
 
                 }
+                else
+                {
+                    if(existingInvestment.Type == "Renda Fixa" && existingInvestment.Fixed.InterestRate > 0)
+                    {
+                        var newIncome = new Income
+                        {
+                            Amount = dto.Fixed!.CurrentAmount * dto.Fixed!.InterestRate,
+                            Type = "Investimento",
+                            UserId = userId,
+                            Description = dto.Name,
+                        };
+
+                        await _incomeRepo.AddAsync(newIncome);
+                    }
+                    if(existingInvestment.Type != "Renda Fixa" && existingInvestment.Variable.MonthlyDividendYield > 0)
+                    {
+                        var newIncome = new Income
+                        {
+                            Amount = ((decimal)dto.Variable!.Quantity * dto.Variable!.CurrentQuotePrice) * (dto.Variable!.MonthlyDividendYield /100),
+                            Type = "Investimento",
+                            UserId = userId,
+                            Description = dto.Name,
+                        };
+
+                        await _incomeRepo.AddAsync(newIncome);
+                    }
+                }
             }
 
             return new InvestmentDto { Id = dto.Id };
