@@ -57,6 +57,7 @@ export class AssetsComponent implements OnInit {
         this.isLoading = false;
       }
     });
+
   }
 
   calcDashboard() {

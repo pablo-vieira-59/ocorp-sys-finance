@@ -87,7 +87,7 @@
             {{inv.variable.quantity * inv.variable.currentQuotePrice | currency:'BRL'}}
           </label>
           <label
-            [className]="((inv.variable.quantity * inv.variable.currentQuotePrice) - inv.variable.investedAmount)  > 0 ? 'col-12 fs-7 fw-bold text-success' : 'col-12 fs-7 fw-bold text-danger'">
+            [className]="((inv.variable.quantity * inv.variable.currentQuotePrice) - inv.variable.investedAmount)  >= 0 ? 'col-12 fs-7 fw-bold text-success' : 'col-12 fs-7 fw-bold text-danger'">
             {{((inv.variable.quantity * inv.variable.currentQuotePrice) -
             inv.variable.investedAmount)/inv.variable.investedAmount | percent}}
             ({{((inv.variable.quantity * inv.variable.currentQuotePrice) - inv.variable.investedAmount) |
@@ -234,7 +234,12 @@
     </div>
 
     <div class="col-12 mt-4">
-      <button (click)="addInvestment()" class="w-100 btn btn-primary">Salvar</button>
+      <button [disabled]="isLoading" (click)="addInvestment()" class="w-100 btn btn-primary">
+        <div *ngIf="isLoading" class="spinner-border spinner-border-sm">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Salvar
+      </button>
     </div>
   </div>
 </div>

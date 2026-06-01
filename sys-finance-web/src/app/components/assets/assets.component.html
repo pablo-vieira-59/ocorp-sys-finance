@@ -118,40 +118,40 @@
   </div>
 
   <div class="row mt-4" *ngIf="assets.length > 0">
-        <h5>Meus bens</h5>
-        <div class="col-lg-4 col-12 p-2" *ngFor="let ass of assets">
-            <div class="border rounded-4 p-4 bg-white stretch">
-                <div class="row">
-                    <div class="col-auto">
-                        <label class="fs-6 fw-bold">{{ass.name}}</label>
-                    </div>
-                    <div class="col text-end" (click)="deleteAsset(ass)">
-                        <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
-                    </div>
-                </div>
-
-                <div class="col-12 fs-7 text-muted ">
-                    {{ass.type}}
-                </div>
-
-                <label class="col-12 fs-7 text-muted mt-2">Valor</label>
-
-                <div>
-                    <label class="col-12 fs-5 fw-bold">
-                        {{ass.estimatedValue| currency:'BRL'}}
-                    </label>
-                </div>
-                <div>
-                    <label class="fs-7 fw-bold text-primary">
-                        {{ass.estimatedValue / dashboard.overallTotal | percent}}
-                    </label>
-                    <label class="ms-1 fs-7 text-muted">do Total</label>
-                </div>
-
-                <button class="mt-4 col-12 btn btn-primary" (click)="editAsset(ass)">Editar</button>
-            </div>
+    <h5>Meus bens</h5>
+    <div class="col-lg-4 col-12 p-2" *ngFor="let ass of assets">
+      <div class="border rounded-4 p-4 bg-white stretch">
+        <div class="row">
+          <div class="col-auto">
+            <label class="fs-6 fw-bold">{{ass.name}}</label>
+          </div>
+          <div class="col text-end" (click)="deleteAsset(ass)">
+            <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+          </div>
         </div>
+
+        <div class="col-12 fs-7 text-muted ">
+          {{ass.type}}
+        </div>
+
+        <label class="col-12 fs-7 text-muted mt-2">Valor</label>
+
+        <div>
+          <label class="col-12 fs-5 fw-bold">
+            {{ass.estimatedValue| currency:'BRL'}}
+          </label>
+        </div>
+        <div>
+          <label class="fs-7 fw-bold text-primary">
+            {{ass.estimatedValue / dashboard.overallTotal | percent}}
+          </label>
+          <label class="ms-1 fs-7 text-muted">do Total</label>
+        </div>
+
+        <button class="mt-4 col-12 btn btn-primary" (click)="editAsset(ass)">Editar</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Modal: Adicionar/Editar Bem -->
@@ -202,7 +202,12 @@
     </div>
 
     <div class="col-12 mt-4">
-      <button (click)="saveAsset()" class="w-100 btn btn-primary">Salvar</button>
+      <button [disabled]="isLoading" (click)="saveAsset()" class="w-100 btn btn-primary">
+        <div *ngIf="isLoading" class="spinner-border spinner-border-sm">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Salvar
+      </button>
     </div>
   </div>
 </div>
@@ -239,7 +244,13 @@
     </div>
 
     <div class="col-12 mt-4">
-      <button (click)="saveHistory()" class="w-100 btn btn-primary">Salvar</button>
+
+      <button [disabled]="isLoading" (click)="saveHistory()" class="w-100 btn btn-primary">
+        <div *ngIf="isLoading" class="spinner-border spinner-border-sm">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Salvar
+      </button>
     </div>
   </div>
 </div>

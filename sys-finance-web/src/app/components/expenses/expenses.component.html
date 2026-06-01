@@ -80,7 +80,8 @@
       <div class="row">
         <h5 class="col-lg-6 col-12">Despesas</h5>
         <div class="col-lg-6 col-12">
-          <input type="text" (keyup)="filterExpenses()" [(ngModel)]="searchExpense" class="form-control" placeholder="Pesquisar...">
+          <input type="text" (keyup)="filterExpenses()" [(ngModel)]="searchExpense" class="form-control"
+            placeholder="Pesquisar...">
         </div>
       </div>
     </div>
@@ -172,7 +173,12 @@
     </div>
 
     <div class="col-12 mt-4">
-      <button (click)="addExpense()" class="w-100 btn btn-primary">Salvar</button>
+      <button [disabled]="isLoading" (click)="addExpense()" class="w-100 btn btn-primary">
+        <div *ngIf="isLoading" class="spinner-border spinner-border-sm">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Salvar
+      </button>
     </div>
   </div>
 </div>

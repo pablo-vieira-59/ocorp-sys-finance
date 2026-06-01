@@ -8,6 +8,7 @@ import { AssetsComponent } from './components/assets/assets.component';
 import { authGuard } from './guards/auth.guard';
 import { AppLayoutComponent } from './components/app-layout/app-layout.component';
 import { IncomeComponent } from './components/income/income.component';
+import { ToolsComponent } from './components/tools/tools.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,6 +23,7 @@ export const routes: Routes = [
       { path: 'expenses', component: ExpensesComponent, canActivate: [authGuard] },
       { path: 'investments', component: InvestmentsComponent, canActivate: [authGuard] },
       { path: 'assets', component: AssetsComponent, canActivate: [authGuard] },
+      { path: 'tools', component: ToolsComponent, canActivate: [authGuard] },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       { path: '**', redirectTo: '/dashboard' }
     ]
