@@ -44,9 +44,9 @@ WORKDIR /app
 
 COPY --from=dotnet-build /app/publish .
 
-EXPOSE 8081
+EXPOSE 80
 
 ENV ASPNETCORE_ENVIRONMENT=Production
-ENV ASPNETCORE_URLS=http://+:8081
+ENV ASPNETCORE_URLS="http://+:80"
 
 ENTRYPOINT ["dotnet", "SysFinance.API.dll"]

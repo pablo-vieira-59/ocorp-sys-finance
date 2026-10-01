@@ -23,7 +23,7 @@ echo Subindo novo container
 echo =========================
 
 docker run -d ^
--p 8080:8080 ^
+-p 4203:80 ^
 -v "C:/Secrets/SysFinance/appsettings.Production.json:/app/appsettings.Production.json" ^
 --name sys-finance-app ^
 --restart unless-stopped ^
