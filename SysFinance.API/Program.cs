@@ -15,19 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Fix for PostgreSQL DateTime issue
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-if (builder.Environment.IsProduction())
-{
-    builder.WebHost.ConfigureKestrel(options =>
-    {
-        options.ListenAnyIP(80);
-
-        options.ListenAnyIP(443, listenOptions =>
-        {
-            listenOptions.UseHttps("/https/certificate.pfx", "123456");
-        });
-    });
-}
-
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -107,11 +94,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
-if (app.Environment.IsProduction())
-{
-    app.UseHttpsRedirection();
 }
 
 app.UseCors("AllowAngularApp");
