@@ -59,7 +59,7 @@
 
 .mobile-toggle {
   position: fixed;
-  top: 25px;
+  top: 8px;
   left: 15px;
   z-index: 1100;
   font-size: 24px;

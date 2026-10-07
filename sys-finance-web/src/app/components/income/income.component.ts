@@ -22,7 +22,7 @@ export class IncomeComponent implements OnInit {
   dashboard = { totalValue: 0, liquidValue: 0, topIncome: 0, topIncomeName: '', totalAfterDiscounts: 0, percentualAfterDiscounts: 0, discounts: 0 }
   showAddModal = false;
   isLoading = false;
-  incomeToAdd = {} as IncomeDto;
+  incomeToAdd = {type:'Outros'} as IncomeDto;
   error = '';
   incomeTypes = ["Salário CLT","Salário PJ","Lucro de Empresa","Freelance","Outros"]
 

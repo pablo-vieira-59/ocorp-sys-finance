@@ -1,15 +1,18 @@
-<!-- Top Bar -->
 <div class="row mt-0 mx-0 bg-white shadow top-bar">
   <div class="col-lg-8 col-6 d-flex m-0">
-    <h2 class="my-auto">Patrimônio</h2>
+    <div class="fs-5">
+      Patrimônio
+    </div>
   </div>
-  <div class="col-lg-4 col-6 text-end d-flex">
-    <button (click)="openAddAsset()" class="w-100 btn btn-primary my-auto">+ Adicionar Bem</button>
+  <div class="col-lg-4 col-6 text-end">
+    <button (click)="openAddAsset()" class="my-auto btn btn-primary px-2 py-0">
+      <i class="bi bi-plus fs-4"></i>
+    </button>
   </div>
 </div>
 
 <!-- Content -->
-<div class="p-4" style="margin-top: 100px;">
+<div class="p-4" style="margin-top: 64px;">
 
   <!-- Dashboard Cards -->
   <div class="row">
@@ -103,8 +106,8 @@
                 <td class="fw-semibold">{{h.date | date:'MM/yyyy'}}</td>
                 <td class="fw-semibold text-success">{{h.amount | currency:'BRL'}}</td>
                 <td class="text-end text-nowrap">
-                  <button (click)="editHistory(h)" class="btn btn-primary btn-sm me-2">Editar</button>
-                  <button (click)="deleteHistory(h)" class="btn btn-danger btn-sm">Excluir</button>
+                  <button (click)="editHistory(h)" class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button>
+                  <button (click)="deleteHistory(h)" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
                 </td>
               </tr>
               <tr *ngIf="assetHistories.length === 0">
@@ -162,7 +165,7 @@
     <div class="col-12 fw-bold fs-4">
       {{ assetToAdd.id ? 'Editar Bem' : 'Novo Bem' }}
     </div>
-    <div class="col-12 fs-7 text-muted text-nowrap">
+    <div class="col-12 fs-7 text-muted">
       Cadastre um imóvel, veículo, saldo bancário ou outro bem
     </div>
 
@@ -220,7 +223,7 @@
     <div class="col-12 fw-bold fs-4">
       Novo Registro de Patrimônio
     </div>
-    <div class="col-12 fs-7 text-muted text-nowrap">
+    <div class="col-12 fs-7 text-muted">
       Registre o valor total do seu patrimônio neste mês
     </div>
 

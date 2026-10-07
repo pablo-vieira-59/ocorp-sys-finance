@@ -38,7 +38,7 @@ export class ExpensesComponent implements OnInit {
   isLoading = false;
   showCreateModal = false;
   error = '';
-  expenseToAdd = {} as ExpenseDto;
+  expenseToAdd = { category:'Alimentação'} as ExpenseDto;
   mothlyExpense = { totalExpenses: 0, percentalOfIncome: 0 }
   highestCost = { amount: 0, category: '' }
   mostExpensiveCategory = { category: '', percentual: 0 }
