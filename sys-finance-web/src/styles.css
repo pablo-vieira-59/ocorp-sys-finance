@@ -113,7 +113,9 @@ body {
 
 /* Botão fechar */
 .modal-close {
-  float: inline-end;
+  position: absolute;
+  right: 16px;
+  top: 8px;
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;

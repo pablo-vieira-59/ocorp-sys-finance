@@ -65,13 +65,14 @@
         <div class="row">
           <div class="col-auto">
             <label class="fs-6 fw-bold">{{inv.name}}</label>
+            <label class="col-12 fs-7 text-muted">{{inv.type}}</label>
           </div>
           <div class="col text-end" (click)="deleteInvestment(inv)">
-            <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+            <i class="fs-3 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
           </div>
         </div>
 
-        <label class="col-12 fs-7 text-muted">{{inv.type}}</label>
+        
 
         <label class="col-12 fs-7 text-muted mt-2">Valor atual</label>
 
@@ -100,8 +101,14 @@
         </div>
 
         <div class="row mx-0 mt-4">
-          <button class="col-6 me-1 btn btn-outline-primary ">Detalhes</button>
-          <button class="col btn btn-primary" (click)="editInvestment(inv)">Editar</button>
+          <button class="col-6 me-1 btn btn-outline-primary ">
+            <i class="bi bi-eye me-2"></i>
+            Detalhes
+          </button>
+          <button class="col btn btn-primary" (click)="editInvestment(inv)">
+            <i class="bi bi-pencil me-2"></i>
+            Editar
+          </button>
         </div>
       </div>
     </div>

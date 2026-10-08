@@ -106,7 +106,8 @@
                 <td class="fw-semibold">{{h.date | date:'MM/yyyy'}}</td>
                 <td class="fw-semibold text-success">{{h.amount | currency:'BRL'}}</td>
                 <td class="text-end text-nowrap">
-                  <button (click)="editHistory(h)" class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button>
+                  <button (click)="editHistory(h)" class="btn btn-primary btn-sm me-2"><i
+                      class="bi bi-pencil"></i></button>
                   <button (click)="deleteHistory(h)" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
                 </td>
               </tr>
@@ -127,15 +128,16 @@
         <div class="row">
           <div class="col-auto">
             <label class="fs-6 fw-bold">{{ass.name}}</label>
+            <div class="col-12 fs-7 text-muted ">
+              {{ass.type}}
+            </div>
           </div>
           <div class="col text-end" (click)="deleteAsset(ass)">
-            <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+            <i class="fs-3 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
           </div>
         </div>
 
-        <div class="col-12 fs-7 text-muted ">
-          {{ass.type}}
-        </div>
+
 
         <label class="col-12 fs-7 text-muted mt-2">Valor</label>
 
@@ -151,7 +153,10 @@
           <label class="ms-1 fs-7 text-muted">do Total</label>
         </div>
 
-        <button class="mt-4 col-12 btn btn-primary" (click)="editAsset(ass)">Editar</button>
+        <button class="mt-4 col-12 btn btn-primary" (click)="editAsset(ass)">
+          <i class="bi bi-pencil me-2"></i>
+          Editar
+        </button>
       </div>
     </div>
   </div>

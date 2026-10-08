@@ -1,14 +1,14 @@
 <div class="row mt-0 mx-0 bg-white shadow top-bar">
-  <div class="col-lg-8 col-6 d-flex m-0">
-    <div class="fs-5">
-      Renda
+    <div class="col-lg-8 col-6 d-flex m-0">
+        <div class="fs-5">
+            Renda
+        </div>
     </div>
-  </div>
-  <div class="col-lg-4 col-6 text-end">
-    <button (click)="showAddModal = true" class="my-auto btn btn-primary px-2 py-0">
-      <i class="bi bi-plus fs-4"></i>
-    </button>
-  </div>
+    <div class="col-lg-4 col-6 text-end">
+        <button (click)="showAddModal = true" class="my-auto btn btn-primary px-2 py-0">
+            <i class="bi bi-plus fs-4"></i>
+        </button>
+    </div>
 </div>
 
 <div class="p-4" style="margin-top: 64px;">
@@ -102,15 +102,16 @@
                 <div class="row">
                     <div class="col-auto">
                         <label class="fs-6 fw-bold">{{inc.description}}</label>
+                        <div class="col-12 fs-7 text-muted ">
+                            {{inc.type}}
+                        </div>
                     </div>
                     <div class="col text-end" (click)="deleteIncome(inc)">
-                        <i class="fs-6 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
+                        <i class="fs-3 bi bi-x-circle text-danger" style="cursor: pointer;"></i>
                     </div>
                 </div>
 
-                <div class="col-12 fs-7 text-muted ">
-                    {{inc.type}}
-                </div>
+
 
                 <label class="col-12 fs-7 text-muted mt-2">Valor</label>
 
@@ -127,7 +128,11 @@
                 </div>
 
                 <button *ngIf="inc.type != 'Investimento'" class="mt-4 col-12 btn btn-primary"
-                    (click)="editIncome(inc)">Editar</button>
+                    (click)="editIncome(inc)">
+                    <i class="bi bi-pencil me-2"></i>
+
+                    Editar
+                </button>
             </div>
         </div>
     </div>
